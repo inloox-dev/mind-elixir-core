@@ -144,9 +144,7 @@ export function calcP4(toData, p3x, p3y) {
 }
 
 export function generateUUID(): string {
-  return (
-    new Date().getTime().toString(16) + Math.random().toString(16).substr(2)
-  ).substr(2, 16)
+  return crypto.randomUUID()
 }
 
 export function generateNewObj(): NodeObj {

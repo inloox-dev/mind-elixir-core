@@ -78,7 +78,7 @@ module.exports = (env, argv) => {
       //   new BundleAnalyzerPlugin()
       // ],
       optimization: {
-        minimize: true,
+        minimize: false,
         minimizer: [
           new TerserPlugin({
             terserOptions: {
