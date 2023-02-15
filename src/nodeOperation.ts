@@ -511,6 +511,7 @@ export const moveNode = function(from, to) {
 export const moveNodeBefore = function(from, to) {
   const fromObj = from.nodeObj
   const toObj = to.nodeObj
+  if (toObj.parent === undefined) return
   const originParentId = fromObj.parent.id
   moveNodeBeforeObj(fromObj, toObj)
   addParentLink(this.nodeData)
@@ -542,6 +543,7 @@ export const moveNodeBefore = function(from, to) {
 export const moveNodeAfter = function(from, to) {
   const fromObj = from.nodeObj
   const toObj = to.nodeObj
+  if (toObj.parent === undefined) return
   const originParentId = fromObj.parent.id
   moveNodeAfterObj(fromObj, toObj)
   addParentLink(this.nodeData)
