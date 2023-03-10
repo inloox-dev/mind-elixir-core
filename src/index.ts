@@ -30,6 +30,7 @@ import {
   disableEdit,
   expandNode,
   refresh,
+  selectFirstChildWithClass,
 } from './interact'
 import {
   insertSibling,
@@ -393,6 +394,7 @@ MindElixir.prototype = {
   selectNextSibling,
   selectPrevSibling,
   selectFirstChild,
+  selectFirstChildWithClass,
   selectParent,
   getAllDataString,
   getAllData,

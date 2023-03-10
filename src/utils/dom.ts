@@ -68,7 +68,7 @@ export const shapeTpc = function(tpc: Topic, nodeObj: NodeObj) {
     tpc.appendChild(tagsContainer)
   }
 
-  if (true) {
+  if (false) {
     const imgParentContainer = $d.createElement('div')
     imgParentContainer.className = 'symbol symbol-30px symbol-circle symbol-fixed node-contact-image'
     const imgContainer = $d.createElement('img')
@@ -138,8 +138,8 @@ export function createInputDiv(tpc: Topic) {
   div.id = 'input-box'
   div.textContent = origin
   div.contentEditable = 'true'
-  div.spellcheck = false
-  div.style.cssText = `min-width:${tpc.offsetWidth - 8}px;`
+  div.spellcheck = true
+  tpc.childNodes[0].textContent = ''
   if (this.direction === LEFT) div.style.right = '0'
   div.focus()
 
@@ -154,7 +154,7 @@ export function createInputDiv(tpc: Topic) {
   div.addEventListener('keydown', e => {
     e.stopPropagation()
     const key = e.key
-
+    this.linkDiv()
     if (key === 'Enter' || key === 'Tab') {
       // keep wrap for shift enter
       if (e.shiftKey) return
@@ -173,9 +173,9 @@ export function createInputDiv(tpc: Topic) {
     else node.topic = topic
     div.remove()
     this.inputDiv = div = null
-    if (topic === origin) return
     tpc.childNodes[0].textContent = node.topic
     this.linkDiv()
+    if (topic === origin) return
     this.bus.fire('operation', {
       name: 'finishEdit',
       obj: node,

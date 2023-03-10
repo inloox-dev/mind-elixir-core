@@ -23,7 +23,10 @@ export default function(mind) {
     37: () => {
       // left
       if (!mind.currentNode) return
-      if (mind.currentNode.offsetParent.offsetParent.className === 'rhs') {
+
+      if (!mind.currentNode.nodeObj.parent) {
+        mind.selectFirstChildWithClass('lhs')
+      } else if (mind.currentNode.offsetParent.offsetParent.className === 'rhs') {
         mind.selectParent()
       } else if (
         mind.currentNode.offsetParent.offsetParent.className === 'lhs' ||
@@ -35,7 +38,9 @@ export default function(mind) {
     39: () => {
       // right
       if (!mind.currentNode) return
-      if (
+      if (!mind.currentNode.nodeObj.parent) {
+        mind.selectFirstChildWithClass('rhs')
+      } else if (
         mind.currentNode.offsetParent.offsetParent.className === 'rhs' ||
         mind.currentNode.nodeObj.root
       ) {
@@ -90,7 +95,9 @@ export default function(mind) {
   }
   mind.map.onkeydown = e => {
     // console.log(e)
-    e.preventDefault()
+    if (key2func[e.keyCode]) {
+      e.preventDefault()
+    }
     if (!mind.editable) return
     // console.log(e, e.target)
     if (e.target !== e.currentTarget) {
@@ -103,6 +110,18 @@ export default function(mind) {
       else mind.removeNode()
     } else {
       key2func[e.keyCode] && key2func[e.keyCode](e)
+    }
+  }
+
+  mind.map.onmousewheel = e => {
+    if (e.ctrlKey) {
+      e.preventDefault()
+      if (e.wheelDeltaY > 0) {
+        mind.scale((mind.scaleVal += 0.2))
+      }
+      if (e.wheelDeltaY < 0) {
+        mind.scale((mind.scaleVal -= 0.2))
+      }
     }
   }
 }

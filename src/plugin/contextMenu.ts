@@ -41,8 +41,10 @@ export default function(mind, option) {
     menuUl.appendChild(focus)
     menuUl.appendChild(unfocus)
   }
-  menuUl.appendChild(up)
-  menuUl.appendChild(down)
+  if (!option || option.moveNodes) {
+    menuUl.appendChild(up)
+    menuUl.appendChild(down)
+  }
   if (!option || option.link) {
     menuUl.appendChild(link)
   }
@@ -79,12 +81,14 @@ export default function(mind, option) {
         down.className = 'disabled'
         add_sibling.className = 'disabled'
         remove_child.className = 'disabled'
+        add_parent.className = 'disabled'
       } else {
         focus.className = ''
         up.className = ''
         down.className = ''
         add_sibling.className = ''
         remove_child.className = ''
+        add_parent.className = ''
       }
       mind.selectNode(target)
       menuContainer.hidden = false

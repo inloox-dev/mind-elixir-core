@@ -42,7 +42,7 @@ export const unselectNode = function() {
   this.bus.fire('unselectNode')
 }
 export const selectNextSibling = function() {
-  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot') return
+  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot' || !this.currentNode.nodeObj.parent) return
 
   const sibling = this.currentNode.parentElement.parentElement.nextSibling
   let target: HTMLElement
@@ -64,7 +64,7 @@ export const selectNextSibling = function() {
   return true
 }
 export const selectPrevSibling = function() {
-  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot') return
+  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot' || !this.currentNode.nodeObj.parent) return
 
   const sibling = this.currentNode.parentElement.parentElement.previousSibling
   let target
@@ -89,12 +89,25 @@ export const selectFirstChild = function() {
   if (!this.currentNode) return
   const children = this.currentNode.parentElement.nextSibling
   if (children && children.firstChild) {
-    const target = children.firstChild.firstChild.firstChild
+    const target = children.firstChild?.firstChild?.firstChild
+    if (target) {
+      this.selectNode(target)
+    }
+  }
+}
+
+export const selectFirstChildWithClass = function(className: string) {
+  if (this.currentNode.nodeObj.parent) return
+  const children = this.currentNode.parentElement.nextSibling.children as HTMLCollection
+  const nodes = Array.from(children).filter(chapter => chapter.classList.contains(className))
+  if (nodes && nodes[0]) {
+    const target = nodes[0].firstChild.firstChild
     this.selectNode(target)
   }
 }
+
 export const selectParent = function() {
-  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot') return
+  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot' || !this.currentNode.nodeObj.parent) return
 
   const parent = this.currentNode.parentElement.parentElement.parentElement
     .previousSibling
