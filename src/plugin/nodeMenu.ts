@@ -60,8 +60,8 @@ export default function(mind) {
     .join('')}
   </div>
   <div class="bof">
-  <span class="font">${i18n[locale].font}</span>
   <span class="background">${i18n[locale].background}</span>
+  <span class="font">${i18n[locale].font}</span>
   </div>`)
   const tagDiv = createDiv('nm-tag', `${i18n[locale].tag}<input class="nm-tag" tabindex="-1" placeholder="${i18n[locale].tagsSeparate}" />`)
   const iconDiv = createDiv('nm-icon', `${i18n[locale].icon}<input class="nm-icon" tabindex="-1" placeholder="${i18n[locale].iconsSeparate}" />`)
@@ -88,6 +88,7 @@ export default function(mind) {
   const bold:HTMLElement = menuContainer.querySelector('.bold')
   const buttonContainer:HTMLElement = menuContainer.querySelector('.button-container')
   const fontBtn:HTMLElement = menuContainer.querySelector('.font')
+  const backgroundBtn:HTMLElement = menuContainer.querySelector('.background')
   const tagInput:HTMLInputElement = mind.container.querySelector('.nm-tag')
   const iconInput:HTMLInputElement = mind.container.querySelector('.nm-icon')
   const urlInput:HTMLInputElement = mind.container.querySelector('.nm-url')
@@ -113,7 +114,7 @@ export default function(mind) {
       clearSelect('.palette', 'nmenu-selected')
       bgOrFont = 'background'
       target.className = 'background selected'
-      target.previousElementSibling.className = 'font'
+      fontBtn.className = 'font'
       if (nodeObj.style && nodeObj.style.background) {
         menuContainer.querySelector(
           '.palette[data-color="' + nodeObj.style.background + '"]'
@@ -123,7 +124,7 @@ export default function(mind) {
       clearSelect('.palette', 'nmenu-selected')
       bgOrFont = 'font'
       target.className = 'font selected'
-      target.nextElementSibling.className = 'background'
+      backgroundBtn.className = 'background'
       if (nodeObj.style && nodeObj.style.color) {
         menuContainer.querySelector(
           '.palette[data-color="' + nodeObj.style.color + '"]'
@@ -200,9 +201,9 @@ export default function(mind) {
     clearSelect('.palette', 'nmenu-selected')
     clearSelect('.size', 'size-selected')
     clearSelect('.bold', 'size-selected')
-    bgOrFont = 'font'
-    fontBtn.className = 'font selected'
-    fontBtn.nextElementSibling.className = 'background'
+    bgOrFont = 'background'
+    fontBtn.className = 'font'
+    backgroundBtn.className = 'background selected'
     if (nodeObj.style) {
       if (nodeObj.style.fontSize) {
         menuContainer.querySelector(

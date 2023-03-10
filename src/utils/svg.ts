@@ -3,9 +3,9 @@ const svgNS = 'http://www.w3.org/2000/svg'
 export const createMainPath = function(d: string) {
   const path = $d.createElementNS(svgNS, 'path')
   path.setAttribute('d', d)
-  path.setAttribute('stroke', '#666')
+  path.setAttribute('stroke', '#b5b5c3')
   path.setAttribute('fill', 'none')
-  path.setAttribute('stroke-width', '2')
+  path.setAttribute('stroke-width', '2.5')
   return path
 }
 
@@ -26,7 +26,7 @@ export const createLine = function(
   line.setAttribute('y1', y1)
   line.setAttribute('x2', x2)
   line.setAttribute('y2', y2)
-  line.setAttribute('stroke', '#bbb')
+  line.setAttribute('stroke', '#7e8299')
   line.setAttribute('fill', 'none')
   line.setAttribute('stroke-width', '2')
   return line
