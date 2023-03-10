@@ -67,6 +67,26 @@ export const shapeTpc = function(tpc: Topic, nodeObj: NodeObj) {
       .join('')
     tpc.appendChild(tagsContainer)
   }
+
+  if (true) {
+    const imgParentContainer = $d.createElement('div')
+    imgParentContainer.className = 'symbol symbol-30px symbol-circle symbol-fixed node-contact-image'
+    const imgContainer = $d.createElement('img')
+    imgContainer.src = 'https://localhost:44304/Image/ContactSmall/A497AC23-B621-4480-A053-EBAC562C1C02?accountId=351673f3-4a09-8529-fdff-2cb38696b28f'
+    imgParentContainer.appendChild(imgContainer)
+    imgParentContainer.addEventListener('click', () => {
+      debugger
+      if (!imgParentContainer) return
+      const node = tpc.nodeObj
+      this.bus.fire('operation', {
+        name: 'contactImageClick',
+        obj: node,
+        origin,
+      })
+    })
+
+    tpc.appendChild(imgParentContainer)
+  }
 }
 
 export const createGroup = function(nodeObj: NodeObj, omitChildren?: boolean) {
