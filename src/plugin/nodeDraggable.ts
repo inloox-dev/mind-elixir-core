@@ -29,7 +29,7 @@ const clearPreview = function(el) {
 }
 
 const canPreview = function(el:Element, dragged:Topic) {
-  const isContain = dragged.parentNode.parentNode.contains(el)
+  const isContain = dragged?.parentNode?.parentNode?.contains(el) ?? false
   return (
     el &&
     el.tagName === 'TPC' &&
@@ -47,12 +47,14 @@ export default function(mind) {
 
   mind.map.addEventListener('dragstart', function(e) {
     dragged = e.target
-    ;(dragged.parentNode.parentNode as Group).style.opacity = '0.5'
+    e.target.classList.add('dragging');
+    (dragged.parentNode.parentNode as Group).style.opacity = '0.5'
     dragMoveHelper.clear()
   })
 
   mind.map.addEventListener('dragend', async function(e: DragEvent) {
-    (e.target as HTMLElement).style.opacity = ''
+    (e.target as HTMLElement).style.opacity = '';
+    (e.target as HTMLElement).classList.remove('dragging')
     clearPreview(meet)
     const obj = dragged.nodeObj
     switch (insertLocation) {

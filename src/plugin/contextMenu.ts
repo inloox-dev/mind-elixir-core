@@ -17,13 +17,13 @@ export default function(mind, option) {
   }
   const locale = i18n[mind.locale] ? mind.locale : 'en'
 
-  const add_child = createLi('cm-add_child', i18n[locale].addChild, 'tab')
+  const add_child = createLi('cm-add_child', i18n[locale].addChild, i18n[locale].addChildShortcut)
   const add_parent = createLi('cm-add_parent', i18n[locale].addParent, '')
-  const add_sibling = createLi('cm-add_sibling', i18n[locale].addSibling, 'enter')
+  const add_sibling = createLi('cm-add_sibling', i18n[locale].addSibling, i18n[locale].addSiblingShortcut)
   const remove_child = createLi(
     'cm-remove_child',
     i18n[locale].removeNode,
-    'delete'
+    i18n[locale].deleteShortcut
   )
   const focus = createLi('cm-fucus', i18n[locale].focus, '')
   const unfocus = createLi('cm-unfucus', i18n[locale].cancelFocus, '')

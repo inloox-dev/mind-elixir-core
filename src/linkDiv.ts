@@ -209,7 +209,7 @@ function traverseChildren(children: HTMLCollection, parent: HTMLElement, first?:
 
 // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d#path_commands
 function generatePrimaryLine2({ x1, y1, x2, y2 }) {
-  return `M ${x1} 10000 V ${y2 > y1 ? (y2 - 50) : (y2 + 50)} C ${x1} ${y2} ${x1} ${y2} ${x2 > x1 ? (x1 + 50) : (x1 - 50)} ${y2} H ${x2}`
+  return `M ${x1} 10000 V ${y2 > y1 ? (y2 - 20) : (y2 + 20)} C ${x1} ${y2} ${x1} ${y2} ${x2 > x1 ? (x1 + 20) : (x1 - 20)} ${y2} H ${x2}`
 }
 
 function generatePrimaryLine1({ x1, y1, x2, y2 }) {
