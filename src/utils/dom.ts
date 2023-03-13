@@ -68,6 +68,15 @@ export const shapeTpc = function(tpc: Topic, nodeObj: NodeObj) {
     tpc.appendChild(tagsContainer)
   }
 
+  const addSiblingContainer = $d.createElement('div')
+  addSiblingContainer.className = 'button-add-sibling'
+  addSiblingContainer.innerHTML = '<i class="fa-duotone fa-circle-plus"></i>'
+  const addChildContainer = $d.createElement('div')
+  addChildContainer.className = 'button-add-child'
+  addChildContainer.innerHTML = '<i class="fa-duotone fa-circle-plus"></i>'
+  tpc.appendChild(addSiblingContainer)
+  tpc.appendChild(addChildContainer)
+
   if (false) {
     const imgParentContainer = $d.createElement('div')
     imgParentContainer.className = 'symbol symbol-30px symbol-circle symbol-fixed node-contact-image'
