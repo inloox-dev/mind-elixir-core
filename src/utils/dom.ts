@@ -1,3 +1,4 @@
+import i18n from '../i18n'
 import { LEFT, RIGHT, SIDE } from '../const'
 import { NodeObj } from '../index'
 import { encodeHTML } from '../utils/index'
@@ -75,7 +76,12 @@ export const shapeTpc = function(tpc: Topic, nodeObj: NodeObj) {
   addChildContainer.className = 'button-add-child'
   addChildContainer.innerHTML = '<i class="fa-duotone fa-circle-plus"></i>'
   tpc.appendChild(addSiblingContainer)
+  const deleteNodeContainer = $d.createElement('div')
+  deleteNodeContainer.className = 'button-delete-node'
+  deleteNodeContainer.innerHTML = '<i class="fa-duotone fa-circle-trash"></i>'
+  tpc.appendChild(addSiblingContainer)
   tpc.appendChild(addChildContainer)
+  tpc.appendChild(deleteNodeContainer)
 
   if (false) {
     const imgParentContainer = $d.createElement('div')

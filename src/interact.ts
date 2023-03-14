@@ -1,4 +1,5 @@
 import { findEle } from './utils/dom'
+
 /**
  * @exports -
  * workaround for jsdoc
@@ -28,31 +29,7 @@ export const selectNode = function (targetElement, isNewNode, clickEvent) {
   targetElement.className = 'selected'
   this.currentNode = targetElement
 
-  const bas = targetElement.querySelector('.button-add-sibling')
-  bas.setAttribute('style', 'left:' + (targetElement.offsetWidth / 2 - 12) + 'px;top:' + (targetElement.offsetHeight + 15) + 'px')
-
-  const bac = targetElement.querySelector('.button-add-child')
-  if (targetElement.nodeObj.direction === 1) {
-    bac.setAttribute('style', 'left:' + (targetElement.offsetWidth + 15) + 'px;top:' + (targetElement.offsetHeight / 2 - 12) + 'px')
-  } else {
-    bac.setAttribute('style', 'left:' + (0 - 24 - 15) + 'px;top:' + (targetElement.offsetHeight / 2 - 12) + 'px')
-  }
-
-  if (!targetElement.nodeObj.parent) {
-    bas.classList.add('button-add-is-root')
-    bac.classList.add('button-add-is-root')
-  } else {
-    bas.classList.remove('button-add-is-root')
-    bac.classList.remove('button-add-is-root')
-  }
-
-  if (!targetElement.nodeObj.children || targetElement.nodeObj.children.length === 0) {
-    bas.classList.add('button-add-has-no-children')
-    bac.classList.add('button-add-has-no-children')
-  } else {
-    bas.classList.remove('button-add-has-no-children')
-    bac.classList.remove('button-add-has-no-children')
-  }
+  updateNodeButtonPositions.call(this, targetElement)
 
   if (isNewNode) {
     this.bus.fire('selectNewNode', targetElement.nodeObj, clickEvent)
@@ -384,3 +361,43 @@ export const refresh = function (data) {
   // generate links between nodes
   this.linkDiv()
 }
+
+export const updateNodeButtonPositions = function updateNodeButtonPositions(this: any, targetElement: any) {
+  const marginFromNode = 15
+  const halfSizeButton = 14
+  const bas = targetElement.querySelector('.button-add-sibling')
+  bas.setAttribute('style', 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;top:' + (targetElement.offsetHeight + marginFromNode) + 'px')
+
+  const bac = targetElement.querySelector('.button-add-child')
+  if (!targetElement.nodeObj.parent) {
+    bac.setAttribute('style', 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;top:' + (targetElement.offsetHeight + marginFromNode) + 'px')
+  } else if (this.root.getBoundingClientRect().left < targetElement.getBoundingClientRect().left) {
+    bac.setAttribute('style', 'left:' + (targetElement.offsetWidth + marginFromNode) + 'px;top:' + (targetElement.offsetHeight / 2 - halfSizeButton) + 'px')
+  } else {
+    bac.setAttribute('style', 'left:' + (0 - (halfSizeButton * 2) - marginFromNode) + 'px;top:' + (targetElement.offsetHeight / 2 - halfSizeButton) + 'px')
+  }
+
+  const bad = targetElement.querySelector('.button-delete-node')
+  bad.setAttribute('style', 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;bottom:' + (targetElement.clientHeight + marginFromNode) + 'px')
+
+  if (!targetElement.nodeObj.parent) {
+    bas.classList.add('button-add-is-root')
+    bac.classList.add('button-add-is-root')
+    bad.classList.add('button-add-is-root')
+  } else {
+    bas.classList.remove('button-add-is-root')
+    bac.classList.remove('button-add-is-root')
+    bad.classList.remove('button-add-is-root')
+  }
+
+  if (!targetElement.nodeObj.children || targetElement.nodeObj.children.length === 0) {
+    bas.classList.add('button-add-has-no-children')
+    bac.classList.add('button-add-has-no-children')
+    bad.classList.add('button-add-has-no-children')
+  } else {
+    bas.classList.remove('button-add-has-no-children')
+    bac.classList.remove('button-add-has-no-children')
+    bad.classList.remove('button-add-has-no-children')
+  }
+}
+

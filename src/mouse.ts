@@ -1,5 +1,5 @@
 import { dragMoveHelper } from './utils/index'
-export default function(mind) {
+export default function (mind) {
   mind.map.addEventListener('click', e => {
     // if (dragMoveHelper.afterMoving) return
     // e.preventDefault() // can cause a tag don't work
@@ -16,6 +16,12 @@ export default function(mind) {
       }
     } else if (e.target.className === 'circle') {
       // skip circle
+    } else if (e.target.parentElement.classList.contains('button-add-sibling')) {
+      mind.insertSibling()
+    } else if (e.target.parentElement.classList.contains('button-add-child')) {
+      mind.addChild()
+    } else if (e.target.parentElement.classList.contains('button-delete-node')) {
+      mind.removeNode()
     } else {
       mind.unselectNode()
       // lite version doesn't have hideLinkController
