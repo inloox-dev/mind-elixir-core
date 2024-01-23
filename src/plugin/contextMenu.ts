@@ -20,10 +20,10 @@ export default function (mind: MindElixirInstance, option: any) {
   }
   const locale = i18n[mind.locale] ? mind.locale : 'en'
   const lang = i18n[locale]
-  const add_child = createLi('cm-add_child', lang.addChild, 'tab')
+  const add_child = createLi('cm-add_child', lang.addChild, i18n[locale].addChildShortcut)
   const add_parent = createLi('cm-add_parent', lang.addParent, '')
-  const add_sibling = createLi('cm-add_sibling', lang.addSibling, 'enter')
-  const remove_child = createLi('cm-remove_child', lang.removeNode, 'delete')
+  const add_sibling = createLi('cm-add_sibling', lang.addSibling, i18n[locale].addSiblingShortcut)
+  const remove_child = createLi('cm-remove_child', lang.removeNode, i18n[locale].deleteShortcut)
   const focus = createLi('cm-fucus', lang.focus, '')
   const unfocus = createLi('cm-unfucus', lang.cancelFocus, '')
   const up = createLi('cm-up', lang.moveUp, 'PgUp')
@@ -41,8 +41,10 @@ export default function (mind: MindElixirInstance, option: any) {
     menuUl.appendChild(focus)
     menuUl.appendChild(unfocus)
   }
-  menuUl.appendChild(up)
-  menuUl.appendChild(down)
+  if (!option || option.moveNodes) {
+    menuUl.appendChild(up)
+    menuUl.appendChild(down)
+  }
   menuUl.appendChild(summary)
   if (!option || option.link) {
     menuUl.appendChild(link)
@@ -82,6 +84,7 @@ export default function (mind: MindElixirInstance, option: any) {
         add_parent.className = 'disabled'
         add_sibling.className = 'disabled'
         remove_child.className = 'disabled'
+        add_parent.className = 'disabled'
       } else {
         focus.className = ''
         up.className = ''
@@ -89,6 +92,7 @@ export default function (mind: MindElixirInstance, option: any) {
         add_parent.className = ''
         add_sibling.className = ''
         remove_child.className = ''
+        add_parent.className = ''
       }
       if (!mind.currentNodes) mind.selectNode(target)
       menuContainer.hidden = false
