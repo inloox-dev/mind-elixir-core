@@ -39,6 +39,12 @@ export default function (mind: MindElixirInstance) {
       }
     } else if (target.className === 'circle') {
       // skip circle
+    } else if (target.parentElement.classList.contains('button-add-sibling')) {
+      mind.insertSibling()
+    } else if (target.parentElement.classList.contains('button-add-child')) {
+      mind.addChild()
+    } else if (target.parentElement.classList.contains('button-delete-node')) {
+      mind.removeNode()
     } else {
       // lite version doesn't have hideLinkController
       mind.hideLinkController && mind.hideLinkController()
