@@ -90,14 +90,14 @@ export const shapeTpc = function (tpc: Topic, nodeObj: NodeObj) {
   }
 
   const addSiblingContainer = $d.createElement('div')
-  addSiblingContainer.className = 'button-add-sibling'
+  addSiblingContainer.className = 'button-node-action button-add-sibling'
   addSiblingContainer.innerHTML = '<i class="fa-duotone fa-circle-plus"></i>'
   const addChildContainer = $d.createElement('div')
-  addChildContainer.className = 'button-add-child'
+  addChildContainer.className = 'button-node-action button-add-child'
   addChildContainer.innerHTML = '<i class="fa-duotone fa-circle-plus"></i>'
   tpc.appendChild(addSiblingContainer)
   const deleteNodeContainer = $d.createElement('div')
-  deleteNodeContainer.className = 'button-delete-node'
+  deleteNodeContainer.className = 'button-node-action button-delete-node'
   deleteNodeContainer.innerHTML = '<i class="fa-duotone fa-circle-trash"></i>'
   tpc.appendChild(addSiblingContainer)
   tpc.appendChild(addChildContainer)

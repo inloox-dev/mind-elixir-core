@@ -33,11 +33,10 @@ export const selectNode = function (this: MindElixirInstance, targetElement: Top
     return this.selectNode(el)
   }
   if (this.currentNode) this.currentNode.className = ''
-  targetElement.className = 'selected'
+  updateNodeButtonPositions.call(this, targetElement)
+  targetElement.className = 'selected selected-single'
   targetElement.scrollIntoView({ block: 'nearest', inline: 'nearest' })
   this.currentNode = targetElement
-
-  updateNodeButtonPositions.call(this, targetElement)
 
   if (isNewNode) {
     this.bus.fire('selectNewNode', targetElement.nodeObj)
@@ -59,7 +58,13 @@ export const selectNodes = function (this: MindElixirInstance, targetElements: T
   if (!targetElements) return
   console.time('selectNodes')
   for (const el of targetElements) {
-    el.className = 'selected'
+    if (targetElements.length === 1) {
+      //single select
+      updateNodeButtonPositions.call(this, el)
+      el.className = 'selected selected-single'
+    } else {
+      el.className = 'selected'
+    }
   }
   this.currentNodes = targetElements
   this.bus.fire(
@@ -73,6 +78,7 @@ export const unselectNodes = function (this: MindElixirInstance) {
   if (this.currentNodes) {
     for (const el of this.currentNodes) {
       el.classList.remove('selected')
+      el.classList.remove('selected-single')
     }
   }
   this.currentNodes = null
@@ -374,19 +380,20 @@ export const updateNodeButtonPositions = function updateNodeButtonPositions(this
   const marginFromNode = 15
   const halfSizeButton = 14
   const bas = targetElement.querySelector('.button-add-sibling')
-  bas.setAttribute('style', 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;top:' + (targetElement.offsetHeight + marginFromNode) + 'px')
+  bas.style = 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;top:' + (targetElement.offsetHeight + marginFromNode) + 'px'
 
   const bac = targetElement.querySelector('.button-add-child')
+  const root = this.map.querySelector('me-root') as HTMLElement
   if (!targetElement.nodeObj.parent) {
-    bac.setAttribute('style', 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;top:' + (targetElement.offsetHeight + marginFromNode) + 'px')
-  } else if (this.root.getBoundingClientRect().left < targetElement.getBoundingClientRect().left) {
-    bac.setAttribute('style', 'left:' + (targetElement.offsetWidth + marginFromNode) + 'px;top:' + (targetElement.offsetHeight / 2 - halfSizeButton) + 'px')
+    bac.style = 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;top:' + (targetElement.offsetHeight + marginFromNode) + 'px'
+  } else if (root.getBoundingClientRect().left < targetElement.getBoundingClientRect().left) {
+    bac.style = 'left:' + (targetElement.offsetWidth + marginFromNode) + 'px;top:' + (targetElement.offsetHeight / 2 - halfSizeButton) + 'px'
   } else {
-    bac.setAttribute('style', 'left:' + (0 - (halfSizeButton * 2) - marginFromNode) + 'px;top:' + (targetElement.offsetHeight / 2 - halfSizeButton) + 'px')
+    bac.style = 'left:' + (0 - halfSizeButton * 2 - marginFromNode) + 'px;top:' + (targetElement.offsetHeight / 2 - halfSizeButton) + 'px'
   }
 
   const bad = targetElement.querySelector('.button-delete-node')
-  bad.setAttribute('style', 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;bottom:' + (targetElement.clientHeight + marginFromNode) + 'px')
+  bad.style = 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;bottom:' + (targetElement.clientHeight + marginFromNode) + 'px'
 
   if (!targetElement.nodeObj.parent) {
     bas.classList.add('button-add-is-root')
