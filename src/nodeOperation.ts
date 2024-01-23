@@ -417,6 +417,7 @@ export const moveNode = function (this: MindElixirInstance, from: Topic, to: Top
 export const moveNodeBefore = function (this: MindElixirInstance, from: Topic, to: Topic) {
   const obj = from.nodeObj
   const toObj = to.nodeObj
+  if (toObj.parent === undefined) return
   const originParentId = obj.parent?.id
   moveNodeBeforeObj(obj, toObj)
   fillParent(this.nodeData)
@@ -447,6 +448,7 @@ export const moveNodeBefore = function (this: MindElixirInstance, from: Topic, t
 export const moveNodeAfter = function (this: MindElixirInstance, from: Topic, to: Topic) {
   const obj = from.nodeObj
   const toObj = to.nodeObj
+  if (toObj.parent === undefined) return
   const originParentId = obj.parent?.id
   moveNodeAfterObj(obj, toObj)
   fillParent(this.nodeData)
