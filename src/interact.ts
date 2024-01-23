@@ -36,6 +36,9 @@ export const selectNode = function (this: MindElixirInstance, targetElement: Top
   targetElement.className = 'selected'
   targetElement.scrollIntoView({ block: 'nearest', inline: 'nearest' })
   this.currentNode = targetElement
+
+  updateNodeButtonPositions.call(this, targetElement)
+
   if (isNewNode) {
     this.bus.fire('selectNewNode', targetElement.nodeObj)
   } else {
@@ -77,7 +80,7 @@ export const unselectNodes = function (this: MindElixirInstance) {
 }
 
 export const selectNextSibling = function (this: MindElixirInstance) {
-  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot') return false
+  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot' || !this.currentNode.nodeObj.parent) return false
 
   const sibling = this.currentNode.parentElement.parentElement.nextSibling
   let target: Topic
@@ -90,7 +93,7 @@ export const selectNextSibling = function (this: MindElixirInstance) {
   return true
 }
 export const selectPrevSibling = function (this: MindElixirInstance) {
-  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot') return false
+  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot' || !this.currentNode.nodeObj.parent) return false
 
   const sibling = this.currentNode.parentElement.parentElement.previousSibling
   let target: Topic
@@ -106,12 +109,26 @@ export const selectFirstChild = function (this: MindElixirInstance) {
   if (!this.currentNode) return
   const children = this.currentNode.parentElement.nextSibling
   if (children && children.firstChild) {
-    const target = children.firstChild.firstChild.firstChild
-    this.selectNode(target)
+    const target = children.firstChild?.firstChild?.firstChild
+    if (target) {
+      this.selectNode(target)
+    }
+  }
+}
+export const selectFirstChildWithClass = function (this: MindElixirInstance, className: string) {
+  if (!this.currentNode) return
+  if (this.currentNode.nodeObj.parent) return
+  const children = this.currentNode.parentElement.nextSibling.children as HTMLCollection
+  const nodes = Array.from(children).filter(chapter => chapter.classList.contains(className))
+  if (nodes && nodes[0]) {
+    const target = nodes[0].firstChild?.firstChild as Topic
+    if (target) {
+      this.selectNode(target)
+    }
   }
 }
 export const selectParent = function (this: MindElixirInstance) {
-  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot') return
+  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot' || !this.currentNode.nodeObj.parent) return
 
   const parent = this.currentNode.parentElement.parentElement.parentElement.previousSibling
   if (parent) {
@@ -351,4 +368,43 @@ export const refresh = function (this: MindElixirInstance, data?: MindElixirData
   this.layout()
   // generate links between nodes
   this.linkDiv()
+}
+
+export const updateNodeButtonPositions = function updateNodeButtonPositions(this: any, targetElement: any) {
+  const marginFromNode = 15
+  const halfSizeButton = 14
+  const bas = targetElement.querySelector('.button-add-sibling')
+  bas.setAttribute('style', 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;top:' + (targetElement.offsetHeight + marginFromNode) + 'px')
+
+  const bac = targetElement.querySelector('.button-add-child')
+  if (!targetElement.nodeObj.parent) {
+    bac.setAttribute('style', 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;top:' + (targetElement.offsetHeight + marginFromNode) + 'px')
+  } else if (this.root.getBoundingClientRect().left < targetElement.getBoundingClientRect().left) {
+    bac.setAttribute('style', 'left:' + (targetElement.offsetWidth + marginFromNode) + 'px;top:' + (targetElement.offsetHeight / 2 - halfSizeButton) + 'px')
+  } else {
+    bac.setAttribute('style', 'left:' + (0 - (halfSizeButton * 2) - marginFromNode) + 'px;top:' + (targetElement.offsetHeight / 2 - halfSizeButton) + 'px')
+  }
+
+  const bad = targetElement.querySelector('.button-delete-node')
+  bad.setAttribute('style', 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;bottom:' + (targetElement.clientHeight + marginFromNode) + 'px')
+
+  if (!targetElement.nodeObj.parent) {
+    bas.classList.add('button-add-is-root')
+    bac.classList.add('button-add-is-root')
+    bad.classList.add('button-add-is-root')
+  } else {
+    bas.classList.remove('button-add-is-root')
+    bac.classList.remove('button-add-is-root')
+    bad.classList.remove('button-add-is-root')
+  }
+
+  if (!targetElement.nodeObj.children || targetElement.nodeObj.children.length === 0) {
+    bas.classList.add('button-add-has-no-children')
+    bac.classList.add('button-add-has-no-children')
+    bad.classList.add('button-add-has-no-children')
+  } else {
+    bas.classList.remove('button-add-has-no-children')
+    bac.classList.remove('button-add-has-no-children')
+    bad.classList.remove('button-add-has-no-children')
+  }
 }
