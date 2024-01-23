@@ -32,7 +32,7 @@ const clearPreview = function (el: Element | null) {
 }
 
 const canPreview = function (el: Element, dragged: Topic) {
-  const isContain = dragged.parentElement.parentElement.contains(el)
+  const isContain = dragged?.parentElement?.parentElement?.contains(el) ?? false
   return el && el.tagName === 'ME-TPC' && el !== dragged && !isContain && (el as Topic).nodeObj.root !== true
 }
 
@@ -58,6 +58,7 @@ export default function (mind: MindElixirInstance) {
       return
     }
     dragged = target
+    dragged.classList.add('dragging')
     dragged.parentElement.parentElement.style.opacity = '0.5'
     ghost.innerHTML = dragged.innerHTML
     e.dataTransfer?.setDragImage(ghost, 0, 0)
@@ -69,6 +70,7 @@ export default function (mind: MindElixirInstance) {
     dragged.parentElement.parentElement.style.opacity = '1'
     const target = e.target as Topic
     target.style.opacity = ''
+    target.classList.remove('dragging')
     if (!meet) return
     clearPreview(meet)
     const obj = dragged.nodeObj
