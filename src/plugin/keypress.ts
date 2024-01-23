@@ -138,7 +138,9 @@ export default function (mind: MindElixirInstance) {
   }
   mind.map.onkeydown = e => {
     // console.log(e)
-    e.preventDefault()
+    if (key2func[e.keyCode]) {
+      e.preventDefault()
+    }
     if (!mind.editable) return
     // console.log(e, e.target)
     if (e.target !== e.currentTarget) {
@@ -158,6 +160,17 @@ export default function (mind: MindElixirInstance) {
     } else {
       const keyHandler = key2func[e.keyCode]
       keyHandler && keyHandler(e)
+    }
+  }
+  mind.map.onwheel = e => {
+    if (e.ctrlKey) {
+      e.preventDefault()
+      if (e.deltaY > 0) {
+        mind.scale((mind.scaleVal += 0.2))
+      }
+      if (e.deltaY < 0) {
+        mind.scale((mind.scaleVal -= 0.2))
+      }
     }
   }
 }
