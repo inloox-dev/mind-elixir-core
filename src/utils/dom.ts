@@ -20,7 +20,7 @@ export const shapeTpc = function (tpc: Topic, nodeObj: NodeObj) {
     tpc.style.color = nodeObj.style.color || ''
     tpc.style.background = nodeObj.style.background || ''
     tpc.style.fontSize = nodeObj.style.fontSize + 'px'
-    tpc.style.fontWeight = nodeObj.style.fontWeight || 'normal'
+    tpc.style.fontWeight = nodeObj.style.fontWeight || '400'
   }
 
   if (nodeObj.branchColor) {
@@ -88,6 +88,20 @@ export const shapeTpc = function (tpc: Topic, nodeObj: NodeObj) {
   } else if (tpc.tags) {
     tpc.tags = undefined
   }
+
+  const addSiblingContainer = $d.createElement('div')
+  addSiblingContainer.className = 'button-add-sibling'
+  addSiblingContainer.innerHTML = '<i class="fa-duotone fa-circle-plus"></i>'
+  const addChildContainer = $d.createElement('div')
+  addChildContainer.className = 'button-add-child'
+  addChildContainer.innerHTML = '<i class="fa-duotone fa-circle-plus"></i>'
+  tpc.appendChild(addSiblingContainer)
+  const deleteNodeContainer = $d.createElement('div')
+  deleteNodeContainer.className = 'button-delete-node'
+  deleteNodeContainer.innerHTML = '<i class="fa-duotone fa-circle-trash"></i>'
+  tpc.appendChild(addSiblingContainer)
+  tpc.appendChild(addChildContainer)
+  tpc.appendChild(deleteNodeContainer)
 }
 
 // everything start from `Wrapper`
@@ -148,8 +162,8 @@ export const editTopic = function (this: MindElixirInstance, el: Topic) {
   div.id = 'input-box'
   div.textContent = origin
   div.contentEditable = 'true'
-  div.spellcheck = false
-  div.style.cssText = `min-width:${el.offsetWidth - 8}px;`
+  div.spellcheck = true
+  el.childNodes[0].textContent = ''
   if (this.direction === LEFT) div.style.right = '0'
   div.focus()
 
@@ -164,6 +178,7 @@ export const editTopic = function (this: MindElixirInstance, el: Topic) {
     e.stopPropagation()
     const key = e.key
 
+    this.linkDiv()
     if (key === 'Enter' || key === 'Tab') {
       // keep wrap for shift enter
       if (e.shiftKey) return
@@ -181,9 +196,9 @@ export const editTopic = function (this: MindElixirInstance, el: Topic) {
     if (topic === '') node.topic = origin
     else node.topic = topic
     div.remove()
-    if (topic === origin) return
     el.text.textContent = node.topic
     this.linkDiv()
+    if (topic === origin) return
     this.bus.fire('operation', {
       name: 'finishEdit',
       obj: node,
