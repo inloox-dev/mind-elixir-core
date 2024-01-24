@@ -43,7 +43,7 @@ const i18n: Record<string, LangPack> = {
     url: 'URL',
     addChildShortcut: 'Tab',
     addSiblingShortcut: 'Return',
-    deleteShortcut: 'Del'
+    deleteShortcut: 'Del',
   },
   de: {
     addChild: 'Knoten hinzufügen',

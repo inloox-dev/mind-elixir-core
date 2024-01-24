@@ -28,6 +28,7 @@
 }
 
 .map-container {
+  -webkit-user-select: none;
   user-select: none;
   height: 100%;
   width: 100%;
@@ -50,6 +51,7 @@
     height: 20000px;
     width: 20000px;
     position: relative;
+    -webkit-user-select: none;
     user-select: none;
     transition: transform 0.3s;
     transform: scale(1);
@@ -59,7 +61,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      height: -moz-fit-content;
       height: fit-content;
+      width: -moz-fit-content;
       width: fit-content;
     }
     me-root {

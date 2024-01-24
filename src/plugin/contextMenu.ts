@@ -45,7 +45,9 @@ export default function (mind: MindElixirInstance, option: any) {
     menuUl.appendChild(up)
     menuUl.appendChild(down)
   }
-  menuUl.appendChild(summary)
+
+  //menuUl.appendChild(summary)
+
   if (!option || option.link) {
     menuUl.appendChild(link)
   }
@@ -149,7 +151,11 @@ export default function (mind: MindElixirInstance, option: any) {
   }
   remove_child.onclick = () => {
     if (isRoot) return
-    mind.removeNode()
+    if (mind.currentNode) {
+      mind.removeNode()
+    } else if (mind.currentNodes) {
+      mind.removeNodes(mind.currentNodes)
+    }
     menuContainer.hidden = true
   }
   focus.onclick = () => {
