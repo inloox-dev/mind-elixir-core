@@ -165,10 +165,10 @@ export default function (mind: MindElixirInstance) {
   mind.map.onwheel = e => {
     if (e.ctrlKey) {
       e.preventDefault()
-      if (e.deltaY > 0) {
+      if (e.deltaY < 0 && mind.scaleVal < 7) {
         mind.scale((mind.scaleVal += 0.2))
       }
-      if (e.deltaY < 0) {
+      if (e.deltaY > 0 && mind.scaleVal > 0.4) {
         mind.scale((mind.scaleVal -= 0.2))
       }
     }

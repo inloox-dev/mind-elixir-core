@@ -48,7 +48,7 @@ export default function (mind: MindElixirInstance) {
   let insertTpye: InsertType = null
   let meet: Topic | null = null
   const ghost = createGhost(mind)
-  const threshold = 12
+  const threshold = 14
 
   mind.map.addEventListener('dragstart', e => {
     const target = e.target as Topic
@@ -74,17 +74,33 @@ export default function (mind: MindElixirInstance) {
     if (!meet) return
     clearPreview(meet)
     const obj = dragged.nodeObj
+
+    let nodesToDrag = [dragged]
+    if (mind.currentNodes && mind.currentNodes.length > 0) {
+      if (mind.currentNodes.findIndex(n => n.nodeObj?.id === dragged?.nodeObj?.id) !== -1) {
+        //dragged node is part of current nodes -> move all selected
+        nodesToDrag = mind.currentNodes
+      }
+    }
+
+    const dragTarget = meet
     switch (insertTpye) {
       case 'before':
-        mind.moveNodeBefore(dragged, meet)
+        nodesToDrag.forEach(node => {
+          mind.moveNodeBefore(node, dragTarget)
+        })
         mind.selectNode(E(obj.id))
         break
       case 'after':
-        mind.moveNodeAfter(dragged, meet)
+        nodesToDrag.forEach(node => {
+          mind.moveNodeAfter(node, dragTarget)
+        })
         mind.selectNode(E(obj.id))
         break
       case 'in':
-        mind.moveNode(dragged, meet)
+        nodesToDrag.forEach(node => {
+          mind.moveNode(node, dragTarget)
+        })
         break
     }
     dragged = null

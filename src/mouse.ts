@@ -1,5 +1,5 @@
 import type { SummarySvgGroup } from './summary'
-import type { Expander, CustomSvg } from './types/dom'
+import type { Expander, CustomSvg, Topic } from './types/dom'
 import type { MindElixirInstance } from './types/index'
 import { isTopic } from './utils'
 import dragMoveHelper from './utils/dragMoveHelper'
@@ -24,26 +24,46 @@ export default function (mind: MindElixirInstance) {
     const isNodeAction = target?.parentElement?.classList?.contains('button-node-action') === true
 
     if (!isNodeAction) {
-      mind.unselectNode()
-      mind.unselectNodes()
-      mind.unselectSummary()
-      mind.unselectLink()
       // e.preventDefault() // can cause <a /> tags don't work
       if (target.tagName === 'ME-EPD') {
+        unselectAll(mind)
         mind.expandNode((target as Expander).previousSibling)
       } else if (!mind.editable) {
+        unselectAll(mind)
         return
       } else if (isTopic(target)) {
-        mind.selectNode(target, false, e)
+        if (e.ctrlKey) {
+          //multi select requested
+          let selection: Topic[] = []
+          if (mind.currentNode) {
+            selection.push(mind.currentNode)
+          } else if (mind.currentNodes) {
+            selection.push(...mind.currentNodes)
+          }
+          const alreadySelected = selection.findIndex(n => n.nodeObj.id === target.nodeObj.id) !== -1
+          if (alreadySelected) {
+            selection = selection.filter(n => n.nodeObj.id !== target.nodeObj.id)
+          } else {
+            selection.push(target as Topic)
+          }
+          unselectAll(mind)
+          mind.selectNodes(selection)
+        } else {
+          unselectAll(mind)
+          mind.selectNode(target, false, e)
+        }
       } else if (target.tagName === 'text') {
+        unselectAll(mind)
         if (target.dataset.type === 'custom-link') {
           mind.selectLink(target.parentElement as CustomSvg)
         } else {
           mind.selectSummary(target.parentElement as unknown as SummarySvgGroup)
         }
       } else if (target.className === 'circle') {
+        unselectAll(mind)
         // skip circle
       } else {
+        unselectAll(mind)
         // lite version doesn't have hideLinkController
         mind.hideLinkController && mind.hideLinkController()
       }
@@ -103,4 +123,11 @@ export default function (mind: MindElixirInstance) {
   mind.map.addEventListener('contextmenu', e => {
     e.preventDefault()
   })
+}
+
+function unselectAll(mind: MindElixirInstance) {
+  mind.unselectNode()
+  mind.unselectNodes()
+  mind.unselectSummary()
+  mind.unselectLink()
 }

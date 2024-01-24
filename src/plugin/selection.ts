@@ -43,8 +43,8 @@ export default function (mei: MindElixirInstance) {
         mei.unselectNodes()
         mei.unselectSummary()
         mei.unselectLink()
-        selection.clearSelection(true, true)
       }
+      selection.clearSelection(true, true)
     })
     .on(
       'move',
@@ -64,7 +64,27 @@ export default function (mei: MindElixirInstance) {
       }
     )
     .on('stop', ({ store: { stored } }) => {
-      mei.selectNodes(stored as Topic[])
+      const combinedSelection: Topic[] = []
+      if (mei.currentNode) {
+        combinedSelection.push(mei.currentNode)
+      } else if (mei.currentNodes) {
+        combinedSelection.push(...mei.currentNodes)
+      }
+
+      const selectedByRectangle = stored as Topic[]
+      selectedByRectangle.forEach(target => {
+        const alreadySelected = combinedSelection.findIndex(n => n.nodeObj.id === target.nodeObj.id) !== -1
+        if (!alreadySelected) {
+          //combinedSelection = combinedSelection.filter(n => n.nodeObj.id !== target.nodeObj.id)
+          //} else {
+          combinedSelection.push(target as Topic)
+        }
+      })
+      mei.unselectNode()
+      mei.unselectNodes()
+      mei.unselectSummary()
+      mei.unselectLink()
+      mei.selectNodes(combinedSelection)
     })
   mei.selection = selection
 }
