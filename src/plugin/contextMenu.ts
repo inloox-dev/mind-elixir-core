@@ -73,55 +73,71 @@ export default function (mind: MindElixirInstance, option: any) {
     if (!mind.editable) return
     // console.log(e.pageY, e.screenY, e.clientY)
     const target = e.target as HTMLElement
-    if (isTopic(target)) {
-      //If you hit a target -> select the target
-      mind.selectNode(target)
-    }
-
-    if (mind.currentNode || mind.currentNodes) {
+    const hitTopic = isTopic(target)
+    if (mind.currentNode || mind.currentNodes || hitTopic) {
+      //we have a selection or multiseletion
       mulitpleNodesSelected = (mind.currentNodes && mind.currentNodes.length > 1) === true
 
-      focus.className = mulitpleNodesSelected ? 'disabled' : ''
-      up.className = mulitpleNodesSelected ? 'disabled' : ''
-      down.className = mulitpleNodesSelected ? 'disabled' : ''
-      add_parent.className = mulitpleNodesSelected ? 'disabled' : ''
-      add_sibling.className = mulitpleNodesSelected ? 'disabled' : ''
-      add_parent.className = mulitpleNodesSelected ? 'disabled' : ''
-      add_child.className = mulitpleNodesSelected ? 'disabled' : ''
-
-      menuContainer.hidden = false
-
-      if (dragMoveHelper.mousedown) {
-        dragMoveHelper.mousedown = false
-      }
-
-      menuUl.style.top = ''
-      menuUl.style.bottom = ''
-      menuUl.style.left = ''
-      menuUl.style.right = ''
-      const rect = menuUl.getBoundingClientRect()
-      const height = menuUl.offsetHeight
-      const width = menuUl.offsetWidth
-
-      const relativeY = e.clientY - rect.top
-      const relativeX = e.clientX - rect.left
-
-      if (height + relativeY > window.innerHeight) {
-        menuUl.style.top = ''
-        menuUl.style.bottom = '0px'
-      } else {
-        menuUl.style.bottom = ''
-        menuUl.style.top = relativeY + 15 + 'px'
-      }
-
-      if (width + relativeX > window.innerWidth) {
-        menuUl.style.left = ''
-        menuUl.style.right = '0px'
-      } else {
-        menuUl.style.right = ''
-        menuUl.style.left = relativeX + 10 + 'px'
+      //check if the hit target is in selection
+      if (hitTopic) {
+        const topic = target as Topic
+        if (!mulitpleNodesSelected || mind.currentNodes?.findIndex(t => t.nodeObj.id === topic.nodeObj.id) === -1) {
+          //replace the selection as the hit target is not part of current selection
+          mind.unselectNode()
+          mind.unselectNodes()
+          mind.unselectLink()
+          mind.unselectSummary()
+          mind.selectNode(target)
+        }
       }
     }
+
+    if (!mind.currentNode && (!mind.currentNodes || mind.currentNodes.length === 0)) {
+      //we still have no selection
+      return
+    }
+
+    focus.className = mulitpleNodesSelected ? 'disabled' : ''
+    up.className = mulitpleNodesSelected ? 'disabled' : ''
+    down.className = mulitpleNodesSelected ? 'disabled' : ''
+    add_parent.className = mulitpleNodesSelected ? 'disabled' : ''
+    add_sibling.className = mulitpleNodesSelected ? 'disabled' : ''
+    add_parent.className = mulitpleNodesSelected ? 'disabled' : ''
+    add_child.className = mulitpleNodesSelected ? 'disabled' : ''
+
+    menuContainer.hidden = false
+
+    if (dragMoveHelper.mousedown) {
+      dragMoveHelper.mousedown = false
+    }
+
+    menuUl.style.top = ''
+    menuUl.style.bottom = ''
+    menuUl.style.left = ''
+    menuUl.style.right = ''
+    const rect = menuUl.getBoundingClientRect()
+    const height = menuUl.offsetHeight
+    const width = menuUl.offsetWidth
+
+    const relativeY = e.clientY - rect.top
+    const relativeX = e.clientX - rect.left
+
+    if (height + relativeY > window.innerHeight) {
+      menuUl.style.top = ''
+      menuUl.style.bottom = '0px'
+    } else {
+      menuUl.style.bottom = ''
+      menuUl.style.top = relativeY + 15 + 'px'
+    }
+
+    if (width + relativeX > window.innerWidth) {
+      menuUl.style.left = ''
+      menuUl.style.right = '0px'
+    } else {
+      menuUl.style.right = ''
+      menuUl.style.left = relativeX + 10 + 'px'
+    }
+    
   }
 
   menuContainer.onclick = e => {
@@ -129,10 +145,12 @@ export default function (mind: MindElixirInstance, option: any) {
   }
 
   add_child.onclick = () => {
+    if (mulitpleNodesSelected) return
     mind.addChild()
     menuContainer.hidden = true
   }
   add_parent.onclick = () => {
+    if (mulitpleNodesSelected) return
     mind.insertParent()
     menuContainer.hidden = true
   }
@@ -142,7 +160,6 @@ export default function (mind: MindElixirInstance, option: any) {
     menuContainer.hidden = true
   }
   remove_child.onclick = () => {
-    if (mulitpleNodesSelected) return
     if (mind.currentNode) {
       mind.removeNode()
     } else if (mind.currentNodes) {
