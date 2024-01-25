@@ -67,36 +67,28 @@ export default function (mind: MindElixirInstance, option: any) {
   menuContainer.hidden = true
 
   mind.container.append(menuContainer)
-  let isRoot = true
+  let mulitpleNodesSelected = false
   mind.container.oncontextmenu = function (e) {
     e.preventDefault()
     if (!mind.editable) return
     // console.log(e.pageY, e.screenY, e.clientY)
     const target = e.target as HTMLElement
     if (isTopic(target)) {
-      if (target.parentElement.tagName === 'ME-ROOT') {
-        isRoot = true
-      } else {
-        isRoot = false
-      }
-      if (isRoot) {
-        focus.className = 'disabled'
-        up.className = 'disabled'
-        down.className = 'disabled'
-        add_parent.className = 'disabled'
-        add_sibling.className = 'disabled'
-        remove_child.className = 'disabled'
-        add_parent.className = 'disabled'
-      } else {
-        focus.className = ''
-        up.className = ''
-        down.className = ''
-        add_parent.className = ''
-        add_sibling.className = ''
-        remove_child.className = ''
-        add_parent.className = ''
-      }
-      if (!mind.currentNodes) mind.selectNode(target)
+      //If you hit a target -> select the target
+      mind.selectNode(target)
+    }
+
+    if (mind.currentNode || mind.currentNodes) {
+      mulitpleNodesSelected = (mind.currentNodes && mind.currentNodes.length > 1) === true
+
+      focus.className = mulitpleNodesSelected ? 'disabled' : ''
+      up.className = mulitpleNodesSelected ? 'disabled' : ''
+      down.className = mulitpleNodesSelected ? 'disabled' : ''
+      add_parent.className = mulitpleNodesSelected ? 'disabled' : ''
+      add_sibling.className = mulitpleNodesSelected ? 'disabled' : ''
+      add_parent.className = mulitpleNodesSelected ? 'disabled' : ''
+      add_child.className = mulitpleNodesSelected ? 'disabled' : ''
+
       menuContainer.hidden = false
 
       if (dragMoveHelper.mousedown) {
@@ -145,12 +137,12 @@ export default function (mind: MindElixirInstance, option: any) {
     menuContainer.hidden = true
   }
   add_sibling.onclick = () => {
-    if (isRoot) return
+    if (mulitpleNodesSelected) return
     mind.insertSibling()
     menuContainer.hidden = true
   }
   remove_child.onclick = () => {
-    if (isRoot) return
+    if (mulitpleNodesSelected) return
     if (mind.currentNode) {
       mind.removeNode()
     } else if (mind.currentNodes) {
@@ -159,7 +151,7 @@ export default function (mind: MindElixirInstance, option: any) {
     menuContainer.hidden = true
   }
   focus.onclick = () => {
-    if (isRoot) return
+    if (mulitpleNodesSelected) return
     mind.focusNode(mind.currentNode as Topic)
     menuContainer.hidden = true
   }
@@ -168,12 +160,12 @@ export default function (mind: MindElixirInstance, option: any) {
     menuContainer.hidden = true
   }
   up.onclick = () => {
-    if (isRoot) return
+    if (mulitpleNodesSelected) return
     mind.moveUpNode()
     menuContainer.hidden = true
   }
   down.onclick = () => {
-    if (isRoot) return
+    if (mulitpleNodesSelected) return
     mind.moveDownNode()
     menuContainer.hidden = true
   }

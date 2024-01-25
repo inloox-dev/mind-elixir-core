@@ -87,6 +87,10 @@ export const generateNewObj = function (this: MindElixirInstance): NodeObjExport
   return {
     topic: this.newTopicName,
     id,
+    style: {
+      fontSize: '15',
+      fontWeight: 'normal',
+    },
   }
 }
 

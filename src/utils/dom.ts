@@ -19,7 +19,7 @@ export const shapeTpc = function (tpc: Topic, nodeObj: NodeObj) {
   tpc.style.color = nodeObj.style?.color || '#000'
   tpc.style.background = nodeObj.style?.background || '#fff'
   tpc.style.fontSize = (nodeObj.style?.fontSize || '15') + 'px'
-  tpc.style.fontWeight = nodeObj.style?.fontWeight || '300'
+  tpc.style.fontWeight = nodeObj.style?.fontWeight || '400'
 
   if (nodeObj.branchColor) {
     tpc.style.borderColor = nodeObj.branchColor
