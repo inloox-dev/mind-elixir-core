@@ -137,7 +137,6 @@ export default function (mind: MindElixirInstance, option: any) {
       menuUl.style.right = ''
       menuUl.style.left = relativeX + 10 + 'px'
     }
-    
   }
 
   menuContainer.onclick = e => {
