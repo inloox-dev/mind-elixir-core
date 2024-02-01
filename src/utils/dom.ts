@@ -1,4 +1,5 @@
 import { LEFT } from '../const'
+import { updateNodeButtonPositions } from '../interact'
 import type { Topic, Wrapper, Parent, Children, Expander } from '../types/dom'
 import type { MindElixirInstance, NodeObj } from '../types/index'
 import { encodeHTML } from '../utils/index'
@@ -155,6 +156,7 @@ export const editTopic = function (this: MindElixirInstance, el: Topic) {
   console.time('editTopic')
   if (!el) return
   const div = $d.createElement('div')
+  el.classList.add('node-editing')
   const origin = el.text.textContent as string
   el.appendChild(div)
   div.id = 'input-box'
@@ -195,6 +197,8 @@ export const editTopic = function (this: MindElixirInstance, el: Topic) {
     else node.topic = topic
     div.remove()
     el.text.textContent = node.topic
+    updateNodeButtonPositions.call(this, el)
+    el.classList.remove('node-editing')
     this.linkDiv()
     if (topic === origin) return
     this.bus.fire('operation', {
