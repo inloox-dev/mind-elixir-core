@@ -1,8 +1,8 @@
 {
   "name": "mind-elixir-ts",
-  "version": "3.4.3",
+  "version": "3.4.7",
   "type": "module",
-  "description": "Mind elixir is a free open source mind map core.",
+  "description": "Mind elixir TS InLoox Fork.",
   "keywords": [
     "mind-elixir",
     "mindmap",

@@ -98,6 +98,7 @@ export default function (mind: MindElixirInstance) {
    */
   mind.map.addEventListener('mousemove', e => {
     // click trigger mousemove in windows chrome
+    if (e.ctrlKey === true) return
     if ((e.target as HTMLElement).contentEditable !== 'true') {
       dragMoveHelper.onMove(e, mind.container)
     }
@@ -105,6 +106,7 @@ export default function (mind: MindElixirInstance) {
   mind.map.addEventListener('mousedown', e => {
     const mouseMoveButton = mind.mouseSelectionButton === 0 ? 2 : 0
     if (e.button !== mouseMoveButton) return
+    if (e.ctrlKey === true) return
     if ((e.target as HTMLElement).contentEditable !== 'true') {
       dragMoveHelper.moved = false
       dragMoveHelper.mousedown = true
@@ -112,11 +114,13 @@ export default function (mind: MindElixirInstance) {
   })
   mind.map.addEventListener('mouseleave', e => {
     const mouseMoveButton = mind.mouseSelectionButton === 0 ? 2 : 0
+    if (e.ctrlKey === true) return
     if (e.button !== mouseMoveButton) return
     dragMoveHelper.clear()
   })
   mind.map.addEventListener('mouseup', e => {
     const mouseMoveButton = mind.mouseSelectionButton === 0 ? 2 : 0
+    if (e.ctrlKey === true) return
     if (e.button !== mouseMoveButton) return
     dragMoveHelper.clear()
   })

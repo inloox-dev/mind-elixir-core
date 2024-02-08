@@ -178,6 +178,7 @@ export const editTopic = function (this: MindElixirInstance, el: Topic) {
     e.stopPropagation()
     const key = e.key
 
+    el.classList.add('node-editing')
     this.linkDiv()
     if (key === 'Enter' || key === 'Tab') {
       // keep wrap for shift enter
