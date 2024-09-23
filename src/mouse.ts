@@ -47,9 +47,6 @@ export default function (mind: MindElixirInstance) {
     if (target.tagName === 'ME-EPD') {
       mind.clearSelection()
       mind.expandNode((target as Expander).previousSibling)
-    } else if (!mind.editable) {
-      mind.clearSelection()
-      return
     } else if (isTopic(target)) {
       if (e.ctrlKey) {
         //multi select requested
@@ -71,6 +68,9 @@ export default function (mind: MindElixirInstance) {
         mind.clearSelection()
         mind.selectNode(target, false, e)
       }
+    } else if (!mind.editable) {
+      mind.clearSelection()
+      return
     } else if (target.tagName === 'text') {
       mind.clearSelection()
       if (target.dataset.type === 'custom-link') {
