@@ -24,12 +24,10 @@ export const selectNode = function (this: MindElixirInstance, targetElement: Top
     if (!el) return
     return this.selectNode(el)
   }
-  if (this.currentNode) this.currentNode.className = ''
   updateNodeButtonPositions.call(this, targetElement)
-  targetElement.className = 'selected selected-single'
+  targetElement.className = 'selected'
   targetElement.scrollIntoView({ block: 'nearest', inline: 'nearest' })
   this.currentNode = targetElement
-
   if (isNewNode) {
     this.bus.fire('selectNewNode', targetElement.nodeObj)
   } else {
@@ -50,13 +48,8 @@ export const unselectNode = function (this: MindElixirInstance) {
 export const selectNodes = function (this: MindElixirInstance, tpc: Topic[]): void {
   console.time('selectNodes')
   for (const el of tpc) {
-    if (tpc.length === 1) {
-      //single select
-      updateNodeButtonPositions.call(this, el)
-      el.className = 'selected selected-single'
-    } else {
-      el.className = 'selected'
-    }
+    el.className = 'selected'
+    updateNodeButtonPositions.call(this, el)
   }
   this.currentNodes = tpc
   this.bus.fire(
@@ -70,71 +63,11 @@ export const unselectNodes = function (this: MindElixirInstance) {
   if (this.currentNodes) {
     for (const el of this.currentNodes) {
       el.classList.remove('selected')
-      el.classList.remove('selected-single')
     }
   }
   this.currentNodes = null
   this.bus.fire('unselectNodes')
 }
-
-export const selectNextSibling = function (this: MindElixirInstance) {
-  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot' || !this.currentNode.nodeObj.parent) return false
-
-  const sibling = this.currentNode.parentElement.parentElement.nextSibling
-  let target: Topic
-  if (sibling) {
-    target = sibling.firstChild.firstChild
-  } else {
-    return false
-  }
-  this.selectNode(target)
-  return true
-}
-export const selectPrevSibling = function (this: MindElixirInstance) {
-  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot' || !this.currentNode.nodeObj.parent) return false
-
-  const sibling = this.currentNode.parentElement.parentElement.previousSibling
-  let target: Topic
-  if (sibling) {
-    target = sibling.firstChild.firstChild
-  } else {
-    return false
-  }
-  this.selectNode(target)
-  return true
-}
-export const selectFirstChild = function (this: MindElixirInstance) {
-  if (!this.currentNode) return
-  const children = this.currentNode.parentElement.nextSibling
-  if (children && children.firstChild) {
-    const target = children.firstChild?.firstChild?.firstChild
-    if (target) {
-      this.selectNode(target)
-    }
-  }
-}
-export const selectFirstChildWithClass = function (this: MindElixirInstance, className: string) {
-  if (!this.currentNode) return
-  if (this.currentNode.nodeObj.parent) return
-  const children = this.currentNode.parentElement.nextSibling.children as HTMLCollection
-  const nodes = Array.from(children).filter(chapter => chapter.classList.contains(className))
-  if (nodes && nodes[0]) {
-    const target = nodes[0].firstChild?.firstChild as Topic
-    if (target) {
-      this.selectNode(target)
-    }
-  }
-}
-export const selectParent = function (this: MindElixirInstance) {
-  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot' || !this.currentNode.nodeObj.parent) return
-
-  const parent = this.currentNode.parentElement.parentElement.parentElement.previousSibling
-  if (parent) {
-    const target = parent.firstChild
-    this.selectNode(target)
-  }
-}
-
 export const clearSelection = function (this: MindElixirInstance) {
   this.unselectNode()
   this.unselectNodes()
