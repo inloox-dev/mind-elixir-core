@@ -73,6 +73,10 @@ export type EventMap = {
   unselectNode: () => void
   unselectNodes: () => void
   expandNode: (nodeObj: NodeObj) => void
+  iconDocClicked: (nodeObj: NodeObj, e?: MouseEvent) => void
+  iconTaskClicked: (nodeObj: NodeObj, e?: MouseEvent) => void
+  iconPlanningClicked: (nodeObj: NodeObj, e?: MouseEvent) => void
+  iconFlagClicked: (nodeObj: NodeObj, e?: MouseEvent) => void
 }
 
 const Bus = {

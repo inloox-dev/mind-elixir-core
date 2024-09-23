@@ -74,6 +74,14 @@ export default function (mind: MindElixirInstance) {
         mind.addChild()
       } else if (target.parentElement.classList.contains('button-delete-node')) {
         mind.removeNode()
+      } else if (target.parentElement.classList.contains('doc-icon')) {
+        mind.bus.fire('iconDocClicked', target.nodeObj, e)
+      } else if (target.parentElement.classList.contains('task-icon')) {
+        mind.bus.fire('iconTaskClicked', target.nodeObj, e)
+      } else if (target.parentElement.classList.contains('planning-icon')) {
+        mind.bus.fire('iconPlanningClicked', target.nodeObj, e)
+      } else if (target.parentElement.classList.contains('flag-icon')) {
+        mind.bus.fire('iconFlagClicked', target.nodeObj, e)
       }
     }
   })

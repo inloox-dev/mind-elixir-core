@@ -163,6 +163,12 @@ export interface NodeObj {
   parent?: NodeObj // root node has no parent
   // TODO: checkbox
   // checkbox?: boolean | undefined
+
+  //relations indicators
+  hasDocuments?: boolean
+  flagIndex?: number
+  hasTasks?: boolean
+  hasPlanning?: boolean
 }
 export type NodeObjExport = Omit<NodeObj, 'parent'>
 
