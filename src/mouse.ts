@@ -23,49 +23,7 @@ export default function (mind: MindElixirInstance) {
     const target = e.target as HTMLElement
     const isNodeAction = target?.parentElement?.classList?.contains('button-node-action') === true
 
-    if (!isNodeAction) {
-      // e.preventDefault() // can cause <a /> tags don't work
-      if (target.tagName === 'ME-EPD') {
-        mind.clearSelection()
-        mind.expandNode((target as Expander).previousSibling)
-      } else if (!mind.editable) {
-        mind.clearSelection()
-        return
-      } else if (isTopic(target)) {
-        if (e.ctrlKey) {
-          //multi select requested
-          let selection: Topic[] = []
-          if (mind.currentNode) {
-            selection.push(mind.currentNode)
-          } else if (mind.currentNodes) {
-            selection.push(...mind.currentNodes)
-          }
-          const alreadySelected = selection.findIndex(n => n.nodeObj.id === target.nodeObj.id) !== -1
-          if (alreadySelected) {
-            selection = selection.filter(n => n.nodeObj.id !== target.nodeObj.id)
-          } else {
-            selection.push(target as Topic)
-          }
-          mind.clearSelection()
-          mind.selectNodes(selection)
-        } else {
-          mind.clearSelection()
-          mind.selectNode(target, false, e)
-        }
-      } else if (target.tagName === 'text') {
-        mind.clearSelection()
-        if (target.dataset.type === 'custom-link') {
-          mind.selectArrow(target.parentElement as unknown as CustomSvg)
-        } else {
-          mind.selectSummary(target.parentElement as unknown as SummarySvgGroup)
-        }
-      } else if (target.className === 'circle') {
-        mind.clearSelection()
-        // skip circle
-      } else {
-        mind.clearSelection()
-      }
-    } else {
+    if (isNodeAction) {
       if (target.parentElement.classList.contains('button-add-sibling')) {
         mind.insertSibling('after')
       } else if (target.parentElement.classList.contains('button-add-child')) {
@@ -81,6 +39,50 @@ export default function (mind: MindElixirInstance) {
       } else if (target.parentElement.classList.contains('flag-icon')) {
         mind.bus.fire('iconFlagClicked', (target as Topic).nodeObj, e)
       }
+
+      return
+    }
+
+    // e.preventDefault() // can cause <a /> tags don't work
+    if (target.tagName === 'ME-EPD') {
+      mind.clearSelection()
+      mind.expandNode((target as Expander).previousSibling)
+    } else if (!mind.editable) {
+      mind.clearSelection()
+      return
+    } else if (isTopic(target)) {
+      if (e.ctrlKey) {
+        //multi select requested
+        let selection: Topic[] = []
+        if (mind.currentNode) {
+          selection.push(mind.currentNode)
+        } else if (mind.currentNodes) {
+          selection.push(...mind.currentNodes)
+        }
+        const alreadySelected = selection.findIndex(n => n.nodeObj.id === target.nodeObj.id) !== -1
+        if (alreadySelected) {
+          selection = selection.filter(n => n.nodeObj.id !== target.nodeObj.id)
+        } else {
+          selection.push(target as Topic)
+        }
+        mind.clearSelection()
+        mind.selectNodes(selection)
+      } else {
+        mind.clearSelection()
+        mind.selectNode(target, false, e)
+      }
+    } else if (target.tagName === 'text') {
+      mind.clearSelection()
+      if (target.dataset.type === 'custom-link') {
+        mind.selectArrow(target.parentElement as unknown as CustomSvg)
+      } else {
+        mind.selectSummary(target.parentElement as unknown as SummarySvgGroup)
+      }
+    } else if (target.className === 'circle') {
+      mind.clearSelection()
+      // skip circle
+    } else {
+      mind.clearSelection()
     }
   })
 
