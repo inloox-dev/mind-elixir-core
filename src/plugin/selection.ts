@@ -24,10 +24,12 @@ export default function (mei: MindElixirInstance) {
     },
   })
     .on('beforestart', ({ event }) => {
-      if ((event as MouseEvent).button !== mei.mouseSelectionButton) return false
+      if (!(event as MouseEvent).ctrlKey) return false
+      //if ((event as MouseEvent).button !== mei.mouseSelectionButton) return false
       if (((event as MouseEvent).target as Topic).tagName === 'ME-TPC') return false
       if (((event as MouseEvent).target as HTMLElement).id === 'input-box') return false
       if (((event as MouseEvent).target as HTMLElement).className === 'circle') return false
+      if (((event as MouseEvent).target as HTMLElement).parentElement?.classList?.contains('button-node-action') === true) return false
       const selectionAreaElement = selection.getSelectionArea()
       selectionAreaElement.style.background = '#4f90f22d'
       selectionAreaElement.style.border = '1px solid #4f90f2'
@@ -60,7 +62,27 @@ export default function (mei: MindElixirInstance) {
       }
     )
     .on('stop', ({ store: { stored } }) => {
-      mei.selectNodes(stored as Topic[])
+      const combinedSelection: Topic[] = []
+      if (mei.currentNode) {
+        combinedSelection.push(mei.currentNode)
+      } else if (mei.currentNodes) {
+        combinedSelection.push(...mei.currentNodes)
+      }
+
+      const selectedByRectangle = stored as Topic[]
+      selectedByRectangle.forEach(target => {
+        const alreadySelected = combinedSelection.findIndex(n => n.nodeObj.id === target.nodeObj.id) !== -1
+        if (!alreadySelected) {
+          //combinedSelection = combinedSelection.filter(n => n.nodeObj.id !== target.nodeObj.id)
+          //} else {
+          combinedSelection.push(target as Topic)
+        }
+      })
+      mei.unselectNode()
+      mei.unselectNodes()
+      mei.unselectSummary()
+      mei.unselectLink()
+      mei.selectNodes(combinedSelection)
     })
   mei.selection = selection
 }

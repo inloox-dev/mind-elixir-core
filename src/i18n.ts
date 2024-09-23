@@ -10,6 +10,16 @@ type LangPack = {
   link: string
   clickTips: string
   summary: string
+  font: string
+  background: string
+  tag: string
+  icon: string
+  tagsSeparate: string
+  iconsSeparate: string
+  url: string
+  addChildShortcut: string
+  addSiblingShortcut: string
+  deleteShortcut: string
 }
 export type Locale = 'cn' | 'zh_CN' | 'zh_TW' | 'en' | 'ru' | 'ja' | 'pt' | 'it' | 'es'
 const cn = {
@@ -53,45 +63,39 @@ const i18n: Record<Locale, LangPack> = {
     link: 'Link',
     clickTips: 'Please click the target node',
     summary: 'Summary',
+    font: 'Font',
+    background: 'Background',
+    tag: 'Tag',
+    icon: 'Icon',
+    tagsSeparate: 'Tags (comma separated)',
+    iconsSeparate: 'Icons (comma separated)',
+    url: 'URL',
+    addChildShortcut: 'Tab',
+    addSiblingShortcut: 'Return',
+    deleteShortcut: 'Del',
   },
-  ru: {
-    addChild: 'Добавить дочерний элемент',
-    addParent: 'Добавить родительский элемент',
-    addSibling: 'Добавить на этом уровне',
-    removeNode: 'Удалить узел',
-    focus: 'Режим фокусировки',
-    cancelFocus: 'Отменить режим фокусировки',
-    moveUp: 'Поднять выше',
-    moveDown: 'Опустить ниже',
-    link: 'Ссылка',
-    clickTips: 'Пожалуйста, нажмите на целевой узел',
-    summary: 'Описание',
-  },
-  ja: {
-    addChild: '子ノードを追加する',
-    addParent: '親ノードを追加します',
-    addSibling: '兄弟ノードを追加する',
-    removeNode: 'ノードを削除',
-    focus: '集中',
-    cancelFocus: '集中解除',
-    moveUp: '上へ移動',
-    moveDown: '下へ移動',
-    link: 'コネクト',
-    clickTips: 'ターゲットノードをクリックしてください',
-    summary: '概要',
-  },
-  pt: {
-    addChild: 'Adicionar item filho',
-    addParent: 'Adicionar item pai',
-    addSibling: 'Adicionar item irmao',
-    removeNode: 'Remover item',
-    focus: 'Modo Foco',
-    cancelFocus: 'Cancelar Modo Foco',
-    moveUp: 'Mover para cima',
-    moveDown: 'Mover para baixo',
+  de: {
+    addChild: 'Knoten hinzufügen',
+    addParent: 'Übergeordneten Knoten hinzufügen',
+    addSibling: 'Knoten hinzufügen (als Nachbar)',
+    removeNode: 'Knoten löschen',
+    focus: 'Fokusmodus',
+    cancelFocus: 'Fokusmodus beenden',
+    moveUp: 'Nach oben',
+    moveDown: 'Nach unten',
     link: 'Link',
-    clickTips: 'Favor clicar no item alvo',
-    summary: 'Resumo',
+    clickTips: 'Bitte wählen Sie einen Zielknoten aus',
+    summary: 'Zusammenfassung',
+    font: 'Schrift',
+    background: 'Hintergrund',
+    tag: 'Tag',
+    icon: 'Icon',
+    tagsSeparate: 'Tags (durch Kommas getrennt)',
+    iconsSeparate: 'Icons (durch Kommas getrennt)',
+    url: 'URL',
+    addChildShortcut: 'Tab',
+    addSiblingShortcut: 'Enter',
+    deleteShortcut: 'Entf',
   },
   it: {
     addChild: 'Aggiungi figlio',

@@ -24,9 +24,12 @@ export const selectNode = function (this: MindElixirInstance, targetElement: Top
     if (!el) return
     return this.selectNode(el)
   }
-  targetElement.className = 'selected'
+  if (this.currentNode) this.currentNode.className = ''
+  updateNodeButtonPositions.call(this, targetElement)
+  targetElement.className = 'selected selected-single'
   targetElement.scrollIntoView({ block: 'nearest', inline: 'nearest' })
   this.currentNode = targetElement
+
   if (isNewNode) {
     this.bus.fire('selectNewNode', targetElement.nodeObj)
   } else {
@@ -46,9 +49,14 @@ export const unselectNode = function (this: MindElixirInstance) {
 
 export const selectNodes = function (this: MindElixirInstance, tpc: Topic[]): void {
   console.time('selectNodes')
-  this.clearSelection()
   for (const el of tpc) {
-    el.className = 'selected'
+    if (tpc.length === 1) {
+      //single select
+      updateNodeButtonPositions.call(this, el)
+      el.className = 'selected selected-single'
+    } else {
+      el.className = 'selected'
+    }
   }
   this.currentNodes = tpc
   this.bus.fire(
@@ -62,10 +70,69 @@ export const unselectNodes = function (this: MindElixirInstance) {
   if (this.currentNodes) {
     for (const el of this.currentNodes) {
       el.classList.remove('selected')
+      el.classList.remove('selected-single')
     }
   }
   this.currentNodes = null
   this.bus.fire('unselectNodes')
+}
+
+export const selectNextSibling = function (this: MindElixirInstance) {
+  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot' || !this.currentNode.nodeObj.parent) return false
+
+  const sibling = this.currentNode.parentElement.parentElement.nextSibling
+  let target: Topic
+  if (sibling) {
+    target = sibling.firstChild.firstChild
+  } else {
+    return false
+  }
+  this.selectNode(target)
+  return true
+}
+export const selectPrevSibling = function (this: MindElixirInstance) {
+  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot' || !this.currentNode.nodeObj.parent) return false
+
+  const sibling = this.currentNode.parentElement.parentElement.previousSibling
+  let target: Topic
+  if (sibling) {
+    target = sibling.firstChild.firstChild
+  } else {
+    return false
+  }
+  this.selectNode(target)
+  return true
+}
+export const selectFirstChild = function (this: MindElixirInstance) {
+  if (!this.currentNode) return
+  const children = this.currentNode.parentElement.nextSibling
+  if (children && children.firstChild) {
+    const target = children.firstChild?.firstChild?.firstChild
+    if (target) {
+      this.selectNode(target)
+    }
+  }
+}
+export const selectFirstChildWithClass = function (this: MindElixirInstance, className: string) {
+  if (!this.currentNode) return
+  if (this.currentNode.nodeObj.parent) return
+  const children = this.currentNode.parentElement.nextSibling.children as HTMLCollection
+  const nodes = Array.from(children).filter(chapter => chapter.classList.contains(className))
+  if (nodes && nodes[0]) {
+    const target = nodes[0].firstChild?.firstChild as Topic
+    if (target) {
+      this.selectNode(target)
+    }
+  }
+}
+export const selectParent = function (this: MindElixirInstance) {
+  if (!this.currentNode || this.currentNode.dataset.nodeid === 'meroot' || !this.currentNode.nodeObj.parent) return
+
+  const parent = this.currentNode.parentElement.parentElement.parentElement.previousSibling
+  if (parent) {
+    const target = parent.firstChild
+    this.selectNode(target)
+  }
 }
 
 export const clearSelection = function (this: MindElixirInstance) {
@@ -323,4 +390,45 @@ export const refresh = function (this: MindElixirInstance, data?: MindElixirData
   this.layout()
   // generate links between nodes
   this.linkDiv()
+}
+
+export const updateNodeButtonPositions = function updateNodeButtonPositions(this: MindElixirInstance, targetElement: Topic) {
+  const marginFromNode = 15
+  const halfSizeButton = 14
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const bas = targetElement.querySelector('.button-add-sibling') as HTMLElement
+  bas.style.cssText = 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;top:' + (targetElement.offsetHeight + marginFromNode) + 'px'
+
+  const bac = targetElement.querySelector('.button-add-child') as HTMLElement
+  const root = this.map.querySelector('me-root') as HTMLElement
+  if (!targetElement.nodeObj.parent) {
+    bac.style.cssText = 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;top:' + (targetElement.offsetHeight + marginFromNode) + 'px'
+  } else if (root.getBoundingClientRect().left < targetElement.getBoundingClientRect().left) {
+    bac.style.cssText = 'left:' + (targetElement.offsetWidth + marginFromNode) + 'px;top:' + (targetElement.offsetHeight / 2 - halfSizeButton) + 'px'
+  } else {
+    bac.style.cssText = 'left:' + (0 - halfSizeButton * 2 - marginFromNode) + 'px;top:' + (targetElement.offsetHeight / 2 - halfSizeButton) + 'px'
+  }
+
+  const bad = targetElement.querySelector('.button-delete-node') as HTMLElement
+  bad.style.cssText = 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;bottom:' + (targetElement.clientHeight + marginFromNode) + 'px'
+
+  if (!targetElement.nodeObj.parent) {
+    bas.classList.add('button-add-is-root')
+    bac.classList.add('button-add-is-root')
+    bad.classList.add('button-add-is-root')
+  } else {
+    bas.classList.remove('button-add-is-root')
+    bac.classList.remove('button-add-is-root')
+    bad.classList.remove('button-add-is-root')
+  }
+
+  if (!targetElement.nodeObj.children || targetElement.nodeObj.children.length === 0) {
+    bas.classList.add('button-add-has-no-children')
+    bac.classList.add('button-add-has-no-children')
+    bad.classList.add('button-add-has-no-children')
+  } else {
+    bas.classList.remove('button-add-has-no-children')
+    bac.classList.remove('button-add-has-no-children')
+    bad.classList.remove('button-add-has-no-children')
+  }
 }

@@ -10,7 +10,7 @@ export const createPath = function (d: string, color: string, width: string) {
   const path = $d.createElementNS(svgNS, 'path')
   setAttributes(path, {
     d,
-    stroke: color || '#666',
+    stroke: color || '#b5b5c3',
     fill: 'none',
     'stroke-width': width,
   })
@@ -26,7 +26,7 @@ export const createLinkSvg = function (klass: string) {
 
 export const createLine = function () {
   const line = $d.createElementNS(svgNS, 'line')
-  line.setAttribute('stroke', '#bbb')
+  line.setAttribute('stroke', '#7e8299')
   line.setAttribute('fill', 'none')
   line.setAttribute('stroke-width', '2')
   return line

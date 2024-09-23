@@ -78,7 +78,7 @@ export function getArrowPoints(p3x: number, p3y: number, p4x: number, p4y: numbe
 }
 
 export function generateUUID(): string {
-  return (new Date().getTime().toString(16) + Math.random().toString(16).substr(2)).substr(2, 16)
+  return crypto.randomUUID()
 }
 
 export const generateNewObj = function (this: MindElixirInstance): NodeObjExport {
@@ -86,6 +86,10 @@ export const generateNewObj = function (this: MindElixirInstance): NodeObjExport
   return {
     topic: this.newTopicName,
     id,
+    style: {
+      fontSize: '15',
+      fontWeight: 'normal',
+    },
   }
 }
 

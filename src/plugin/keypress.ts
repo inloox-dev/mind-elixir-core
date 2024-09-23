@@ -165,7 +165,10 @@ export default function (mind: MindElixirInstance) {
     Backspace: handleRemove,
   }
   mind.map.onkeydown = e => {
-    e.preventDefault()
+    // console.log(e)
+    if (key2func[e.keyCode]) {
+      e.preventDefault()
+    }
     if (!mind.editable) return
     // console.log(e, e.target)
     if (e.target !== e.currentTarget) {
@@ -183,6 +186,17 @@ export default function (mind: MindElixirInstance) {
       if (e.deltaY < 0) handleZoom(mind, 'in', factor)
       else if (mind.scaleVal - 0.2 > 0) handleZoom(mind, 'out', factor)
       e.stopPropagation()
+    }
+  }
+  mind.map.onwheel = e => {
+    if (e.ctrlKey) {
+      e.preventDefault()
+      if (e.deltaY < 0 && mind.scaleVal < 7) {
+        mind.scale((mind.scaleVal += 0.2))
+      }
+      if (e.deltaY > 0 && mind.scaleVal > 0.4) {
+        mind.scale((mind.scaleVal -= 0.2))
+      }
     }
   }
 }

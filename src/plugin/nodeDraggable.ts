@@ -28,6 +28,12 @@ const clearPreview = function (el: Element | null) {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const canPreview = function (el: Element, dragged: Topic) {
+  const isContain = dragged?.parentElement?.parentElement?.contains(el) ?? false
+  return el && el.tagName === 'ME-TPC' && el !== dragged && !isContain && (el as Topic).nodeObj.parent
+}
+
 const canMove = function (el: Element, dragged: Topic[]) {
   for (const node of dragged) {
     const isContain = node.parentElement.parentElement.contains(el)
@@ -49,7 +55,7 @@ export default function (mind: MindElixirInstance) {
   let insertTpye: InsertType = null
   let meet: Topic | null = null
   const ghost = createGhost(mind)
-  const threshold = 12
+  const threshold = 14
 
   mind.map.addEventListener('dragstart', e => {
     const target = e.target as Topic
@@ -70,6 +76,7 @@ export default function (mind: MindElixirInstance) {
       ghost.innerHTML = target.innerHTML
     }
     for (const node of dragged) {
+      node.classList.add('dragging')
       node.parentElement.parentElement.style.opacity = '0.5'
     }
     e.dataTransfer?.setDragImage(ghost, 0, 0)
@@ -83,14 +90,37 @@ export default function (mind: MindElixirInstance) {
     }
     const target = e.target as Topic
     target.style.opacity = ''
+    target.classList.remove('dragging')
     if (!meet) return
     clearPreview(meet)
-    if (insertTpye === 'before') {
-      mind.moveNodeBefore(dragged, meet)
-    } else if (insertTpye === 'after') {
-      mind.moveNodeAfter(dragged, meet)
-    } else if (insertTpye === 'in') {
-      mind.moveNodeIn(dragged, meet)
+    const obj = dragged.nodeObj
+
+    let nodesToDrag = [dragged]
+    if (mind.currentNodes && mind.currentNodes.length > 0) {
+      if (mind.currentNodes.findIndex(n => n.nodeObj?.id === dragged?.nodeObj?.id) !== -1) {
+        //dragged node is part of current nodes -> move all selected
+        nodesToDrag = mind.currentNodes
+      }
+    }
+
+    switch (insertTpye) {
+      case 'before':
+        nodesToDrag.forEach(node => {
+          mind.moveNodeBefore(node, meet)
+        })
+        mind.selectNode(E(obj.id))
+        break
+      case 'after':
+        nodesToDrag.forEach(node => {
+          mind.moveNodeAfter(node, meet)
+        })
+        mind.selectNode(E(obj.id))
+        break
+      case 'in':
+        nodesToDrag.forEach(node => {
+          mind.moveNode(node, meet)
+        })
+        break
     }
     dragged = null
   })

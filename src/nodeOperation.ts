@@ -27,6 +27,7 @@ export const reshapeNode = function (this: MindElixirInstance, tpc: Topic, patch
   const newObj = Object.assign(nodeObj, patchData)
   shapeTpc(tpc, newObj)
   this.linkDiv()
+  this.updateNodeButtonPositions(tpc)
   this.bus.fire('operation', {
     name: 'reshapeNode',
     obj: newObj,
@@ -237,18 +238,25 @@ export const removeNode = function (this: MindElixirInstance, el?: Topic) {
 
 export const removeNodes = function (this: MindElixirInstance, tpcs: Topic[]) {
   tpcs = unionTopics(tpcs)
+  const removedNodes: NodeObj[] = []
   for (const tpc of tpcs) {
     const nodeObj = tpc.nodeObj
-    if (!nodeObj.parent) {
+    if (nodeObj.root === true || nodeObj.parent === undefined) {
       continue
     }
     const siblingLength = removeNodeObj(nodeObj)
+    removedNodes.push(nodeObj)
     removeNodeDom(tpc, siblingLength)
   }
+
+  if (removedNodes.length === 0) {
+    return
+  }
+
   this.linkDiv()
   this.bus.fire('operation', {
     name: 'removeNodes',
-    objs: tpcs.map(tpc => tpc.nodeObj),
+    objs: removedNodes,
   })
 }
 
