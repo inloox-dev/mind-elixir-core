@@ -26,10 +26,10 @@ export default function (mind: MindElixirInstance) {
     if (!isNodeAction) {
       // e.preventDefault() // can cause <a /> tags don't work
       if (target.tagName === 'ME-EPD') {
-        unselectAll(mind)
+        mind.clearSelection()
         mind.expandNode((target as Expander).previousSibling)
       } else if (!mind.editable) {
-        unselectAll(mind)
+        mind.clearSelection()
         return
       } else if (isTopic(target)) {
         if (e.ctrlKey) {
@@ -46,42 +46,40 @@ export default function (mind: MindElixirInstance) {
           } else {
             selection.push(target as Topic)
           }
-          unselectAll(mind)
+          mind.clearSelection()
           mind.selectNodes(selection)
         } else {
-          unselectAll(mind)
+          mind.clearSelection()
           mind.selectNode(target, false, e)
         }
       } else if (target.tagName === 'text') {
-        unselectAll(mind)
+        mind.clearSelection()
         if (target.dataset.type === 'custom-link') {
-          mind.selectArrow(target.parentElement as CustomSvg)
+          mind.selectArrow(target.parentElement as unknown as CustomSvg)
         } else {
           mind.selectSummary(target.parentElement as unknown as SummarySvgGroup)
         }
       } else if (target.className === 'circle') {
-        unselectAll(mind)
+        mind.clearSelection()
         // skip circle
       } else {
-        unselectAll(mind)
-        // lite version doesn't have hideLinkController
-        mind.hideLinkController && mind.hideLinkController()
+        mind.clearSelection()
       }
     } else {
       if (target.parentElement.classList.contains('button-add-sibling')) {
-        mind.insertSibling()
+        mind.insertSibling('after')
       } else if (target.parentElement.classList.contains('button-add-child')) {
         mind.addChild()
       } else if (target.parentElement.classList.contains('button-delete-node')) {
         mind.removeNode()
       } else if (target.parentElement.classList.contains('doc-icon')) {
-        mind.bus.fire('iconDocClicked', target.nodeObj, e)
+        mind.bus.fire('iconDocClicked', (target as Topic).nodeObj, e)
       } else if (target.parentElement.classList.contains('task-icon')) {
-        mind.bus.fire('iconTaskClicked', target.nodeObj, e)
+        mind.bus.fire('iconTaskClicked', (target as Topic).nodeObj, e)
       } else if (target.parentElement.classList.contains('planning-icon')) {
-        mind.bus.fire('iconPlanningClicked', target.nodeObj, e)
+        mind.bus.fire('iconPlanningClicked', (target as Topic).nodeObj, e)
       } else if (target.parentElement.classList.contains('flag-icon')) {
-        mind.bus.fire('iconFlagClicked', target.nodeObj, e)
+        mind.bus.fire('iconFlagClicked', (target as Topic).nodeObj, e)
       }
     }
   })
@@ -135,11 +133,4 @@ export default function (mind: MindElixirInstance) {
   mind.map.addEventListener('contextmenu', e => {
     e.preventDefault()
   })
-}
-
-function unselectAll(mind: MindElixirInstance) {
-  mind.unselectNode()
-  mind.unselectNodes()
-  mind.unselectSummary()
-  mind.unselectLink()
 }

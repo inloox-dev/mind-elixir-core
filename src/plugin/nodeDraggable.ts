@@ -93,33 +93,25 @@ export default function (mind: MindElixirInstance) {
     target.classList.remove('dragging')
     if (!meet) return
     clearPreview(meet)
-    const obj = dragged.nodeObj
-
-    let nodesToDrag = [dragged]
-    if (mind.currentNodes && mind.currentNodes.length > 0) {
-      if (mind.currentNodes.findIndex(n => n.nodeObj?.id === dragged?.nodeObj?.id) !== -1) {
-        //dragged node is part of current nodes -> move all selected
-        nodesToDrag = mind.currentNodes
-      }
-    }
+    const nodesToDrag = dragged
+    // if (mind.currentNodes && mind.currentNodes.length > 0) {
+    //   if (mind.currentNodes.findIndex(n => n.nodeObj?.id === dragged?.nodeObj?.id) !== -1) {
+    //     //dragged node is part of current nodes -> move all selected
+    //     nodesToDrag = mind.currentNodes
+    //   }
+    // }
 
     switch (insertTpye) {
       case 'before':
-        nodesToDrag.forEach(node => {
-          mind.moveNodeBefore(node, meet)
-        })
-        mind.selectNode(E(obj.id))
+        mind.moveNodeBefore(nodesToDrag, meet!)
+        //mind.selectNode(E(obj.id))
         break
       case 'after':
-        nodesToDrag.forEach(node => {
-          mind.moveNodeAfter(node, meet)
-        })
-        mind.selectNode(E(obj.id))
+        mind.moveNodeAfter(nodesToDrag, meet!)
+        //mind.selectNode(E(obj.id))
         break
       case 'in':
-        nodesToDrag.forEach(node => {
-          mind.moveNode(node, meet)
-        })
+        mind.moveNodeIn(nodesToDrag, meet!)
         break
     }
     dragged = null

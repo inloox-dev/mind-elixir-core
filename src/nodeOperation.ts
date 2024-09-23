@@ -241,7 +241,7 @@ export const removeNodes = function (this: MindElixirInstance, tpcs: Topic[]) {
   const removedNodes: NodeObj[] = []
   for (const tpc of tpcs) {
     const nodeObj = tpc.nodeObj
-    if (nodeObj.root === true || nodeObj.parent === undefined) {
+    if (!nodeObj.parent) {
       continue
     }
     const siblingLength = removeNodeObj(nodeObj)

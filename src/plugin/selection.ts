@@ -78,10 +78,7 @@ export default function (mei: MindElixirInstance) {
           combinedSelection.push(target as Topic)
         }
       })
-      mei.unselectNode()
-      mei.unselectNodes()
-      mei.unselectSummary()
-      mei.unselectLink()
+      mei.clearSelection()
       mei.selectNodes(combinedSelection)
     })
   mei.selection = selection

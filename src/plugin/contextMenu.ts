@@ -152,7 +152,6 @@ export default function (mind: MindElixirInstance, option: any) {
     menuContainer.hidden = true
   }
   add_sibling.onclick = () => {
-    if (isRoot) return
     if (mulitpleNodesSelected) return
     mind.insertSibling('after')
     menuContainer.hidden = true
