@@ -238,25 +238,18 @@ export const removeNode = function (this: MindElixirInstance, el?: Topic) {
 
 export const removeNodes = function (this: MindElixirInstance, tpcs: Topic[]) {
   tpcs = unionTopics(tpcs)
-  const removedNodes: NodeObj[] = []
   for (const tpc of tpcs) {
     const nodeObj = tpc.nodeObj
     if (!nodeObj.parent) {
       continue
     }
     const siblingLength = removeNodeObj(nodeObj)
-    removedNodes.push(nodeObj)
     removeNodeDom(tpc, siblingLength)
   }
-
-  if (removedNodes.length === 0) {
-    return
-  }
-
   this.linkDiv()
   this.bus.fire('operation', {
     name: 'removeNodes',
-    objs: removedNodes,
+    objs: tpcs.map(tpc => tpc.nodeObj),
   })
 }
 
