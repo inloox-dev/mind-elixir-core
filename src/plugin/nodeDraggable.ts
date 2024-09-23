@@ -28,12 +28,6 @@ const clearPreview = function (el: Element | null) {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const canPreview = function (el: Element, dragged: Topic) {
-  const isContain = dragged?.parentElement?.parentElement?.contains(el) ?? false
-  return el && el.tagName === 'ME-TPC' && el !== dragged && !isContain && (el as Topic).nodeObj.parent
-}
-
 const canMove = function (el: Element, dragged: Topic[]) {
   for (const node of dragged) {
     const isContain = node.parentElement.parentElement.contains(el)
@@ -55,7 +49,7 @@ export default function (mind: MindElixirInstance) {
   let insertTpye: InsertType = null
   let meet: Topic | null = null
   const ghost = createGhost(mind)
-  const threshold = 14
+  const threshold = 12
 
   mind.map.addEventListener('dragstart', e => {
     const target = e.target as Topic
@@ -93,26 +87,12 @@ export default function (mind: MindElixirInstance) {
     target.classList.remove('dragging')
     if (!meet) return
     clearPreview(meet)
-    const nodesToDrag = dragged
-    // if (mind.currentNodes && mind.currentNodes.length > 0) {
-    //   if (mind.currentNodes.findIndex(n => n.nodeObj?.id === dragged?.nodeObj?.id) !== -1) {
-    //     //dragged node is part of current nodes -> move all selected
-    //     nodesToDrag = mind.currentNodes
-    //   }
-    // }
-
-    switch (insertTpye) {
-      case 'before':
-        mind.moveNodeBefore(nodesToDrag, meet!)
-        //mind.selectNode(E(obj.id))
-        break
-      case 'after':
-        mind.moveNodeAfter(nodesToDrag, meet!)
-        //mind.selectNode(E(obj.id))
-        break
-      case 'in':
-        mind.moveNodeIn(nodesToDrag, meet!)
-        break
+    if (insertTpye === 'before') {
+      mind.moveNodeBefore(dragged, meet)
+    } else if (insertTpye === 'after') {
+      mind.moveNodeAfter(dragged, meet)
+    } else if (insertTpye === 'in') {
+      mind.moveNodeIn(dragged, meet)
     }
     dragged = null
   })
