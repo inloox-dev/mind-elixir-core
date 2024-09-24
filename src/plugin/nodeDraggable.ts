@@ -72,10 +72,8 @@ export default function (mind: MindElixirInstance) {
     for (const node of dragged) {
       node.parentElement.parentElement.style.opacity = '0.5'
     }
-    e.dataTransfer?.setDragImage(ghost, ghost.clientWidth / 2, ghost.clientHeight / 2)
-    mind.map.classList.add('dragging')
+    e.dataTransfer?.setDragImage(ghost, 0, 0)
     dragMoveHelper.clear()
-    e.dataTransfer!.effectAllowed = 'move'
   })
 
   mind.map.addEventListener('dragend', async e => {
@@ -85,7 +83,6 @@ export default function (mind: MindElixirInstance) {
     }
     const target = e.target as Topic
     target.style.opacity = ''
-    mind.map.classList.remove('dragging')
     if (!meet) return
     clearPreview(meet)
     if (insertTpye === 'before') {
@@ -101,7 +98,6 @@ export default function (mind: MindElixirInstance) {
   mind.map.addEventListener(
     'dragover',
     throttle(function (e: DragEvent) {
-      e.preventDefault()
       if (!dragged) return
       clearPreview(meet)
       // minus threshold infer that postion of the cursor is above topic
