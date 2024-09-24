@@ -62,24 +62,7 @@ export default function (mei: MindElixirInstance) {
       }
     )
     .on('stop', ({ store: { stored } }) => {
-      const combinedSelection: Topic[] = []
-      if (mei.currentNode) {
-        combinedSelection.push(mei.currentNode)
-      } else if (mei.currentNodes) {
-        combinedSelection.push(...mei.currentNodes)
-      }
-
-      const selectedByRectangle = stored as Topic[]
-      selectedByRectangle.forEach(target => {
-        const alreadySelected = combinedSelection.findIndex(n => n.nodeObj.id === target.nodeObj.id) !== -1
-        if (!alreadySelected) {
-          //combinedSelection = combinedSelection.filter(n => n.nodeObj.id !== target.nodeObj.id)
-          //} else {
-          combinedSelection.push(target as Topic)
-        }
-      })
-      mei.clearSelection()
-      mei.selectNodes(combinedSelection)
+      mei.selectNodes(stored as Topic[])
     })
   mei.selection = selection
 }

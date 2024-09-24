@@ -73,6 +73,7 @@ export const clearSelection = function (this: MindElixirInstance) {
   this.unselectNodes()
   this.unselectSummary()
   this.unselectArrow()
+  this.selection?.clearSelection(true, true)
 }
 
 /**
