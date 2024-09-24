@@ -1,5 +1,4 @@
 import { LEFT } from '../const'
-import { updateNodeButtonPositions } from '../interact'
 import type { Topic, Wrapper, Parent, Children, Expander } from '../types/dom'
 import type { MindElixirInstance, NodeObj } from '../types/index'
 import { encodeHTML } from '../utils/index'
@@ -180,7 +179,7 @@ export const editTopic = function (this: MindElixirInstance, el: Topic) {
     else node.topic = topic
     div.remove()
     el.text.textContent = node.topic
-    updateNodeButtonPositions.call(this, el)
+    this.bus.fire('updateNodeControls', el)
     el.classList.remove('node-editing')
     this.linkDiv()
     if (topic === origin) return

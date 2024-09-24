@@ -24,7 +24,7 @@ export const selectNode = function (this: MindElixirInstance, targetElement: Top
     if (!el) return
     return this.selectNode(el)
   }
-  updateNodeButtonPositions.call(this, targetElement)
+  this.bus.fire('updateNodeControls', targetElement)
   targetElement.className = 'selected'
   targetElement.scrollIntoView({ block: 'nearest', inline: 'nearest' })
   this.currentNode = targetElement
@@ -49,7 +49,7 @@ export const selectNodes = function (this: MindElixirInstance, tpc: Topic[]): vo
   console.time('selectNodes')
   for (const el of tpc) {
     el.className = 'selected'
-    updateNodeButtonPositions.call(this, el)
+    this.bus.fire('updateNodeControls', el)
   }
   this.currentNodes = tpc
   this.bus.fire(
@@ -324,45 +324,4 @@ export const refresh = function (this: MindElixirInstance, data?: MindElixirData
   this.layout()
   // generate links between nodes
   this.linkDiv()
-}
-
-export const updateNodeButtonPositions = function updateNodeButtonPositions(this: MindElixirInstance, targetElement: Topic) {
-  const marginFromNode = 15
-  const halfSizeButton = 14
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const bas = targetElement.querySelector('.button-add-sibling') as HTMLElement
-  bas.style.cssText = 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;top:' + (targetElement.offsetHeight + marginFromNode) + 'px'
-
-  const bac = targetElement.querySelector('.button-add-child') as HTMLElement
-  const root = this.map.querySelector('me-root') as HTMLElement
-  if (!targetElement.nodeObj.parent) {
-    bac.style.cssText = 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;top:' + (targetElement.offsetHeight + marginFromNode) + 'px'
-  } else if (root.getBoundingClientRect().left < targetElement.getBoundingClientRect().left) {
-    bac.style.cssText = 'left:' + (targetElement.offsetWidth + marginFromNode) + 'px;top:' + (targetElement.offsetHeight / 2 - halfSizeButton) + 'px'
-  } else {
-    bac.style.cssText = 'left:' + (0 - halfSizeButton * 2 - marginFromNode) + 'px;top:' + (targetElement.offsetHeight / 2 - halfSizeButton) + 'px'
-  }
-
-  const bad = targetElement.querySelector('.button-delete-node') as HTMLElement
-  bad.style.cssText = 'left:' + (targetElement.offsetWidth / 2 - halfSizeButton) + 'px;bottom:' + (targetElement.clientHeight + marginFromNode) + 'px'
-
-  if (!targetElement.nodeObj.parent) {
-    bas.classList.add('button-add-is-root')
-    bac.classList.add('button-add-is-root')
-    bad.classList.add('button-add-is-root')
-  } else {
-    bas.classList.remove('button-add-is-root')
-    bac.classList.remove('button-add-is-root')
-    bad.classList.remove('button-add-is-root')
-  }
-
-  if (!targetElement.nodeObj.children || targetElement.nodeObj.children.length === 0) {
-    bas.classList.add('button-add-has-no-children')
-    bac.classList.add('button-add-has-no-children')
-    bad.classList.add('button-add-has-no-children')
-  } else {
-    bas.classList.remove('button-add-has-no-children')
-    bac.classList.remove('button-add-has-no-children')
-    bad.classList.remove('button-add-has-no-children')
-  }
 }

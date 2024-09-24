@@ -21,25 +21,9 @@ export default function (mind: MindElixirInstance) {
     }
 
     const target = e.target as HTMLElement
-    const isNodeAction = target?.parentElement?.classList?.contains('button-node-action') === true
-
-    if (isNodeAction) {
-      if (target.parentElement.classList.contains('button-add-sibling')) {
-        mind.insertSibling('after')
-      } else if (target.parentElement.classList.contains('button-add-child')) {
-        mind.addChild()
-      } else if (target.parentElement.classList.contains('button-delete-node')) {
-        mind.removeNode()
-      } else if (target.parentElement.classList.contains('doc-icon')) {
-        mind.bus.fire('iconDocClicked', (target as Topic).nodeObj, e)
-      } else if (target.parentElement.classList.contains('task-icon')) {
-        mind.bus.fire('iconTaskClicked', (target as Topic).nodeObj, e)
-      } else if (target.parentElement.classList.contains('planning-icon')) {
-        mind.bus.fire('iconPlanningClicked', (target as Topic).nodeObj, e)
-      } else if (target.parentElement.classList.contains('flag-icon')) {
-        mind.bus.fire('iconFlagClicked', (target as Topic).nodeObj, e)
-      }
-
+    const handled = false
+    mind.bus.fire('mouseClick', target, e, handled)
+    if (handled) {
       return
     }
 

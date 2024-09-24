@@ -1,5 +1,6 @@
 import type { Arrow } from '../arrow'
 import type { Summary } from '../summary'
+import type { Topic } from '../types/dom'
 import type { NodeObj } from '../types/index'
 
 type NodeOperation =
@@ -83,6 +84,8 @@ export type EventMap = {
   unselectNode: () => void
   unselectNodes: () => void
   expandNode: (nodeObj: NodeObj) => void
+  updateNodeControls: (topic: Topic) => void
+  mouseClick: (topic: HTMLElement, mouseEvent: MouseEvent, handled: boolean) => void
 }
 
 const Bus = {
