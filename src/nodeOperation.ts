@@ -25,7 +25,7 @@ export const reshapeNode = function (this: MindElixirInstance, tpc: Topic, patch
     patchData.style = Object.assign(origin.style, patchData.style)
   }
   const newObj = Object.assign(nodeObj, patchData)
-  shapeTpc(tpc, newObj)
+  shapeTpc(this, tpc, newObj)
   this.linkDiv()
   this.bus.fire('updateNodeControls', tpc)
   this.bus.fire('operation', {

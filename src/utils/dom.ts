@@ -13,7 +13,7 @@ export const findEle = (id: string, instance?: MindElixirInstance) => {
   return ele
 }
 
-export const shapeTpc = function (tpc: Topic, nodeObj: NodeObj) {
+export const shapeTpc = function (instance: MindElixirInstance, tpc: Topic, nodeObj: NodeObj) {
   tpc.innerHTML = ''
 
   if (nodeObj.style) {
@@ -83,6 +83,8 @@ export const shapeTpc = function (tpc: Topic, nodeObj: NodeObj) {
   } else if (tpc.tags) {
     tpc.tags = undefined
   }
+
+  instance.bus.fire('shapeTopic', tpc, nodeObj, $d)
 }
 
 // everything start from `Wrapper`
@@ -105,7 +107,7 @@ export const createWrapper = function (this: MindElixirInstance, nodeObj: NodeOb
 export const createParent = function (this: MindElixirInstance, nodeObj: NodeObj) {
   const p = $d.createElement('me-parent') as Parent
   const tpc = this.createTopic(nodeObj)
-  shapeTpc(tpc, nodeObj)
+  shapeTpc(this, tpc, nodeObj)
   p.appendChild(tpc)
   return { p, tpc }
 }

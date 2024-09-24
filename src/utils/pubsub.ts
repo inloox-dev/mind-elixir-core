@@ -86,6 +86,7 @@ export type EventMap = {
   expandNode: (nodeObj: NodeObj) => void
   updateNodeControls: (topic: Topic) => void
   mouseClick: (topic: HTMLElement, mouseEvent: MouseEvent, handled: boolean) => void
+  shapeTopic: (topic: Topic, nodeObj: NodeObj, doc: Document) => void
 }
 
 const Bus = {
