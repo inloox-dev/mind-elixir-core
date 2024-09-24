@@ -25,7 +25,7 @@ export const selectNode = function (this: MindElixirInstance, targetElement: Top
     return this.selectNode(el)
   }
   this.bus.fire('updateNodeControls', targetElement)
-  targetElement.className = 'selected'
+  targetElement.className = 'selected selected-single'
   targetElement.scrollIntoView({ block: 'nearest', inline: 'nearest' })
   this.currentNode = targetElement
   if (isNewNode) {
@@ -48,7 +48,7 @@ export const unselectNode = function (this: MindElixirInstance) {
 export const selectNodes = function (this: MindElixirInstance, tpc: Topic[]): void {
   console.time('selectNodes')
   for (const el of tpc) {
-    el.className = 'selected'
+    el.className = tpc.length === 1 ? 'selected selected-single' : 'selected'
     this.bus.fire('updateNodeControls', el)
   }
   this.currentNodes = tpc
@@ -63,6 +63,7 @@ export const unselectNodes = function (this: MindElixirInstance) {
   if (this.currentNodes) {
     for (const el of this.currentNodes) {
       el.classList.remove('selected')
+      el.classList.remove('selected-single')
     }
   }
   this.currentNodes = null
