@@ -119,7 +119,6 @@ export type Options = {
   draggable?: boolean
   editable?: boolean
   contextMenu?: boolean
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   contextMenuOption?: any
   toolBar?: boolean
   keypress?: boolean
@@ -168,12 +167,6 @@ export type NodeObj = {
   parent?: NodeObj // root node has no parent!
   // TODO: checkbox
   // checkbox?: boolean | undefined
-
-  //relations indicators
-  hasDocuments?: boolean
-  flagIndex?: number
-  hasTasks?: boolean
-  hasPlanning?: boolean
   dangerouslySetInnerHTML?: string
 }
 export type NodeObjExport = Omit<NodeObj, 'parent'>

@@ -17,10 +17,12 @@ export const findEle = (id: string, instance?: MindElixirInstance) => {
 export const shapeTpc = function (tpc: Topic, nodeObj: NodeObj) {
   tpc.innerHTML = ''
 
-  tpc.style.color = nodeObj.style?.color || '#000'
-  tpc.style.background = nodeObj.style?.background || '#fff'
-  tpc.style.fontSize = (nodeObj.style?.fontSize || '15') + 'px'
-  tpc.style.fontWeight = nodeObj.style?.fontWeight || '400'
+  if (nodeObj.style) {
+    tpc.style.color = nodeObj.style.color || '#000'
+    tpc.style.background = nodeObj.style.background || '#fff'
+    tpc.style.fontSize = (nodeObj.style.fontSize || '15') + 'px'
+    tpc.style.fontWeight = nodeObj.style.fontWeight || '400'
+  }
 
   if (nodeObj.dangerouslySetInnerHTML) {
     tpc.innerHTML = nodeObj.dangerouslySetInnerHTML

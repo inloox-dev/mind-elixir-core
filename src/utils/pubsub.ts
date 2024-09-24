@@ -83,17 +83,11 @@ export type EventMap = {
   unselectNode: () => void
   unselectNodes: () => void
   expandNode: (nodeObj: NodeObj) => void
-  iconDocClicked: (nodeObj: NodeObj, e?: MouseEvent) => void
-  iconTaskClicked: (nodeObj: NodeObj, e?: MouseEvent) => void
-  iconPlanningClicked: (nodeObj: NodeObj, e?: MouseEvent) => void
-  iconFlagClicked: (nodeObj: NodeObj, e?: MouseEvent) => void
 }
 
 const Bus = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   create<T extends Record<string, (...args: any[]) => void> = EventMap>() {
     return {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       handlers: {} as Record<keyof T, ((...arg: any[]) => void)[]>,
       showHandler: function () {
         console.log(this.handlers)
