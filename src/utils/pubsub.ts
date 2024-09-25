@@ -75,6 +75,9 @@ export type ArrowOperation =
 
 export type Operation = NodeOperation | MultipleNodeOperation | SummaryOperation | ArrowOperation
 export type OperationType = Operation['name']
+export type OperationResult = {
+  handled: boolean
+}
 
 export type EventMap = {
   operation: (info: Operation) => void
@@ -85,7 +88,7 @@ export type EventMap = {
   unselectNodes: () => void
   expandNode: (nodeObj: NodeObj) => void
   updateNodeControls: (topic: Topic) => void
-  mouseClick: (topic: HTMLElement, mouseEvent: MouseEvent, handled: boolean) => void
+  mouseClick: (topic: HTMLElement, mouseEvent: MouseEvent, handled: OperationResult) => void
   shapeTopic: (topic: Topic, nodeObj: NodeObj, doc: Document) => void
 }
 

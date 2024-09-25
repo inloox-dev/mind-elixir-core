@@ -21,9 +21,9 @@ export default function (mind: MindElixirInstance) {
     }
 
     const target = e.target as HTMLElement
-    const handled = false
-    mind.bus.fire('mouseClick', target, e, handled)
-    if (handled) {
+    const operationResult = { handled: false }
+    mind.bus.fire('mouseClick', target, e, operationResult)
+    if (operationResult.handled) {
       return
     }
 
